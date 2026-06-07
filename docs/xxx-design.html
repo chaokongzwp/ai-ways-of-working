@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>〔项目〕· 〔模块〕设计方案</title>
+<script src="./assets/mermaid.min.js"></script>
+<!-- 启用飞书门禁：取消下一行注释（见 DEPLOY.md 二）-->
+<!-- <script src="./assets/auth-guard.js"></script> -->
+<style>
+  :root{ /* ← 换项目只改这一段 */
+    --brand:#f9c74f; --brand-dark:#e07c00; --brand-soft:#fef3c7;
+    --ink:#1a1410; --ink-soft:#4a3f33; --ink-faint:#8b7355;
+    --bg:#faf7f0; --paper:#fff; --border:#e8d9b8; --ok:#15803d; --wip:#1d4ed8; --todo:#c2410c; }
+  *{box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;margin:0;padding:28px 16px 70px;}
+  .container{max-width:1080px;margin:0 auto;}
+  a.back{display:inline-block;margin-bottom:6px;color:var(--brand-dark);font-weight:700;font-size:13px;text-decoration:none;}
+  header{text-align:center;margin-bottom:10px;}
+  header h1{font-size:23px;color:var(--brand-dark);margin:0 0 6px;}
+  header .sub{color:var(--ink-faint);font-size:14px;}
+  .draft{background:#fff7ed;border:1px dashed #fb923c;border-radius:10px;padding:10px 16px;font-size:13px;color:#9a3412;margin:12px 0 18px;text-align:center;}
+  h2.sec{font-size:18px;border-left:5px solid var(--brand);padding-left:12px;margin:30px 0 12px;}
+  .intro{background:linear-gradient(135deg,var(--brand-soft),#fff7e0);border:1px solid var(--brand);border-radius:14px;padding:14px 22px;margin:0 0 20px;line-height:1.85;font-size:14px;}
+  .intro b{color:var(--brand-dark);}
+  .flowwrap{background:var(--paper);border:1px solid var(--border);border-radius:12px;padding:14px 8px;overflow-x:auto;}
+  .note{background:var(--brand-soft);border-radius:10px;padding:14px 18px;font-size:13px;color:var(--ink-soft);margin-top:14px;line-height:1.85;}
+  .note b{color:var(--ink);}
+  code{background:#f1f5f9;padding:1px 6px;border-radius:5px;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#6d28d9;}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:8px;}
+  th,td{border:1px solid var(--border);padding:9px 12px;text-align:left;vertical-align:top;line-height:1.6;}
+  th{background:var(--brand-soft);font-weight:700;}
+  td.k{font-weight:700;white-space:nowrap;}
+  .st{display:inline-block;font-size:12px;padding:1px 9px;border-radius:999px;font-weight:700;}
+  .st.done{background:#f0fdf4;color:var(--ok);} .st.wip{background:#eff6ff;color:var(--wip);} .st.todo{background:#fff7ed;color:var(--todo);}
+  footer{text-align:center;margin-top:38px;color:var(--ink-faint);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="container">
+<a class="back" href="./index.html">← 返回文档导航</a>
+<header>
+  <h1>〔模块〕· 设计方案</h1>
+  <div class="sub">〔一句话副标题〕</div>
+</header>
+
+<div class="draft">🟡 设计稿 · 评审中 · 〔范围 / 依赖一句话〕</div>
+<div class="intro">本稿覆盖：<b>〔哪几件事〕</b>。依赖：〔前置模块 / 数据〕。</div>
+
+<h2 class="sec">一、数据模型</h2>
+<table>
+  <thead><tr><th>字段 / 表</th><th>类型</th><th>口径 / 说明</th></tr></thead>
+  <tbody>
+    <tr><td class="k">〔field〕</td><td>〔type〕</td><td>〔含义、单位、约束〕</td></tr>
+  </tbody>
+</table>
+
+<h2 class="sec">二、流程</h2>
+<div class="flowwrap">
+<pre class="mermaid">
+flowchart LR
+  A["〔输入 / 触发〕"]:::d --> B{"〔处理 / 判断〕"}:::dec
+  B -->|"〔分支1〕"| C["〔结果1〕"]:::d
+  B -->|"〔分支2〕"| D["〔结果2〕"]:::d
+  classDef d fill:#ffffff,stroke:#e8d9b8,color:#1a1410;
+  classDef dec fill:#fef3c7,stroke:#e07c00,color:#7a4f24,stroke-width:2px;
+</pre>
+</div>
+
+<h2 class="sec">三、现状 vs 待做</h2>
+<table>
+  <thead><tr><th>能力</th><th>状态</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td class="k">〔能力 A〕</td><td><span class="st done">✅ 已完成</span></td><td>〔说明〕</td></tr>
+    <tr><td class="k">〔能力 B〕</td><td><span class="st wip">🔵 部分待验</span></td><td>〔说明〕</td></tr>
+    <tr><td class="k">〔能力 C〕</td><td><span class="st todo">🟡 待完成</span></td><td>〔说明〕</td></tr>
+  </tbody>
+</table>
+<div class="note">📌 <b>真正残留</b>（把没做完的单独拎出来，别混在已交付里）：<br>
+  · <b>P1（上线前必做）</b>：〔…〕<br>
+  · <b>P2</b>：〔…〕<br>
+  · <b>P3 / 第二阶段</b>：〔…〕
+</div>
+
+<footer>〔项目〕· 〔模块〕设计 · 评审中 · 数值以〔线上 / 设计稿〕为准</footer>
+</div>
+<script>
+  mermaid.initialize({ startOnLoad:true, theme:'base',
+    themeVariables:{ primaryColor:'#fef3c7', primaryBorderColor:'#e07c00', primaryTextColor:'#1a1410', lineColor:'#c79a3a', fontFamily:"-apple-system,'PingFang SC','Microsoft YaHei',sans-serif", fontSize:'13px' },
+    flowchart:{ curve:'basis', nodeSpacing:32, rankSpacing:40, useMaxWidth:true, htmlLabels:true } });
+</script>
+</body>
+</html>

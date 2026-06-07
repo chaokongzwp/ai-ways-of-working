@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# 临时 / 构建产物
+.ci/
+*.tgz
+*.log
+node_modules/
+
+# 本地凭证（千万别提交）
+.env
+*.local

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用 AI 做项目 · 方法论手册</title>
+<style>
+:root {
+  --brand:#4f46e5; --brand-dark:#3730a3; --brand-soft:#eef2ff;
+  --cyan:#0891b2; --cyan-soft:#ecfeff;
+  --ink:#0f172a; --ink-soft:#475569; --ink-faint:#94a3b8;
+  --bg:#f8fafc; --paper:#fff; --border:#e2e8f0;
+  --ok:#059669; --ok-soft:#f0fdf4;
+  --warn:#d97706; --warn-soft:#fffbeb;
+  --red:#dc2626; --red-soft:#fff1f2;
+}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;
+  background:var(--bg);color:var(--ink);margin:0;line-height:1.7;}
+.w{max-width:1040px;margin:0 auto;padding:0 24px;}
+
+/* ── Hero ── */
+.hero{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 45%,#4f46e5 100%);
+  color:#fff;padding:88px 24px 80px;text-align:center;}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);
+  padding:5px 16px;border-radius:999px;font-size:13px;margin-bottom:22px;letter-spacing:.5px;}
+.hero h1{font-size:56px;font-weight:800;margin:0 0 18px;letter-spacing:-1.5px;line-height:1.1;}
+.hero h1 em{font-style:normal;color:#a5f3fc;}
+.hero p{font-size:18px;opacity:.82;margin:0 auto 48px;max-width:540px;line-height:1.65;}
+.hero-pills{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;}
+.pill{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  padding:8px 20px;border-radius:999px;font-size:14px;font-weight:600;}
+.pill em{color:#a5f3fc;font-style:normal;}
+
+/* ── Section wrapper ── */
+section{padding:68px 0;}
+section.alt{background:var(--paper);}
+.sec-label{display:inline-block;background:var(--brand-soft);color:var(--brand);
+  font-size:12px;font-weight:700;padding:3px 12px;border-radius:999px;margin-bottom:10px;letter-spacing:.5px;}
+.sec-label.cyan{background:var(--cyan-soft);color:var(--cyan);}
+.sec-label.ok{background:var(--ok-soft);color:var(--ok);}
+.sec-label.warn{background:var(--warn-soft);color:var(--warn);}
+h2.sec{font-size:32px;font-weight:800;margin:0 0 10px;line-height:1.2;}
+.sec-sub{font-size:16px;color:var(--ink-soft);margin:0 0 40px;max-width:580px;}
+
+/* ── Pain cards ── */
+.pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.pain-card{background:var(--red-soft);border:1px solid #fecaca;border-radius:16px;padding:22px 20px;}
+.pain-icon{font-size:28px;margin-bottom:10px;}
+.pain-card h3{margin:0 0 8px;font-size:15px;color:var(--red);}
+.pain-card p{margin:0;font-size:13.5px;color:#7f1d1d;line-height:1.65;}
+
+/* ── Principle cards ── */
+.principle-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.principle-card{background:var(--paper);border:1px solid var(--border);border-radius:16px;
+  padding:30px 24px;border-top:4px solid var(--brand);}
+.principle-card.c{border-top-color:var(--cyan);}
+.principle-card.g{border-top-color:var(--ok);}
+.p-icon{font-size:34px;margin-bottom:16px;}
+.principle-card h3{margin:0 0 6px;font-size:19px;font-weight:800;}
+.principle-card .slogan{font-size:13px;font-weight:700;color:var(--brand);margin-bottom:10px;}
+.principle-card.c .slogan{color:var(--cyan);}
+.principle-card.g .slogan{color:var(--ok);}
+.principle-card p{margin:0;font-size:13.5px;color:var(--ink-soft);line-height:1.7;}
+.principle-card .example{background:var(--brand-soft);border-radius:8px;padding:10px 13px;
+  font-size:12.5px;color:var(--brand-dark);margin-top:12px;line-height:1.55;}
+.principle-card.c .example{background:var(--cyan-soft);color:#164e63;}
+.principle-card.g .example{background:var(--ok-soft);color:#14532d;}
+
+/* ── Compare ── */
+.compare-wrap{overflow-x:auto;}
+.compare{width:100%;border-collapse:collapse;font-size:14px;border-radius:12px;overflow:hidden;border:1px solid var(--border);}
+.compare th{padding:14px 18px;font-size:13px;font-weight:700;text-align:left;}
+.compare th.old{background:#fee2e2;color:#991b1b;}
+.compare th.mid{background:#fef3c7;color:#92400e;width:200px;}
+.compare th.new{background:#dbeafe;color:#1e40af;}
+.compare td{padding:12px 18px;border-top:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.compare tr:nth-child(even) td{background:#fafafa;}
+.compare .old-t{color:var(--ink-soft);}
+.compare .role{font-weight:700;}
+.compare .new-t{color:#1e40af;font-weight:500;}
+.compare .mid-t{color:#92400e;font-size:12px;}
+
+/* ── Workflow ── */
+.steps{display:flex;flex-direction:column;}
+.step{display:flex;gap:24px;align-items:flex-start;}
+.step-spine{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.step-num{width:46px;height:46px;border-radius:50%;background:var(--brand);color:#fff;
+  font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center;z-index:1;}
+.step-line{width:2px;flex:1;min-height:36px;background:linear-gradient(var(--brand),var(--brand-soft));margin:6px 0;}
+.step-body{background:var(--paper);border:1px solid var(--border);border-radius:14px;
+  padding:20px 22px;margin-bottom:16px;flex:1;}
+.step-body h3{margin:0 0 6px;font-size:16px;font-weight:800;}
+.step-body p{margin:0 0 10px;font-size:13.5px;color:var(--ink-soft);line-height:1.65;}
+.step-body p:last-child{margin:0;}
+.step-eg{background:var(--brand-soft);border-radius:8px;padding:10px 14px;
+  font-size:12.5px;color:var(--brand-dark);line-height:1.6;}
+.step-eg strong{color:var(--brand);}
+.who{display:inline-block;padding:2px 10px;border-radius:999px;font-size:11.5px;font-weight:700;margin-right:6px;}
+.who.ai{background:#dbeafe;color:#1e40af;}
+.who.human{background:var(--ok-soft);color:var(--ok);}
+
+/* ── Doc types ── */
+.doc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.doc-card{background:var(--paper);border:1px solid var(--border);border-radius:14px;
+  padding:22px 20px;display:flex;gap:16px;align-items:flex-start;}
+.doc-icon{width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;}
+.doc-icon.b{background:var(--brand-soft);}
+.doc-icon.g{background:var(--ok-soft);}
+.doc-icon.c{background:var(--cyan-soft);}
+.doc-icon.y{background:#fffbeb;}
+.doc-card h3{margin:0 0 3px;font-size:15px;font-weight:700;}
+.doc-card code{font-size:11.5px;color:var(--brand);font-family:ui-monospace,monospace;display:block;margin-bottom:6px;}
+.doc-card p{margin:0;font-size:13px;color:var(--ink-soft);line-height:1.6;}
+
+/* ── Checklist ── */
+.ck-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.ck-week{background:var(--paper);border:1px solid var(--border);border-radius:14px;padding:22px 20px;}
+.ck-week h3{margin:0 0 14px;font-size:13px;font-weight:700;color:var(--ink-soft);
+  text-transform:uppercase;letter-spacing:.6px;}
+.ck-week h3 span{display:block;font-size:17px;color:var(--ink);margin-top:3px;font-weight:800;}
+.ck-week ul{list-style:none;margin:0;padding:0;}
+.ck-week li{display:flex;align-items:flex-start;gap:9px;font-size:13.5px;
+  margin-bottom:11px;line-height:1.5;color:var(--ink-soft);}
+.ck-box{width:18px;height:18px;border:2px solid var(--brand);border-radius:4px;
+  flex-shrink:0;margin-top:1px;}
+
+/* ── Traps ── */
+.trap-list{display:flex;flex-direction:column;gap:12px;}
+.trap{display:flex;gap:16px;align-items:flex-start;background:var(--paper);
+  border:1px solid var(--border);border-left:4px solid var(--warn);
+  border-radius:0 12px 12px 0;padding:16px 20px;}
+.trap-num{width:30px;height:30px;background:var(--warn-soft);color:var(--warn);
+  border-radius:50%;font-size:13px;font-weight:700;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;margin-top:1px;}
+.trap h4{margin:0 0 4px;font-size:14px;font-weight:700;}
+.trap p{margin:0;font-size:13px;color:var(--ink-soft);line-height:1.6;}
+.trap .fix{color:var(--ok);font-weight:600;}
+
+/* ── Quote ── */
+.big-quote{background:linear-gradient(135deg,var(--brand-soft),#dbeafe);
+  border-radius:16px;padding:36px 40px;text-align:center;margin:0 0 40px;}
+.big-quote p{font-size:22px;font-weight:700;line-height:1.5;margin:0;color:var(--brand-dark);}
+.big-quote span{display:block;font-size:14px;font-weight:400;color:var(--ink-soft);margin-top:10px;}
+
+/* ── Footer ── */
+footer{text-align:center;padding:36px 20px;color:var(--ink-faint);font-size:12px;border-top:1px solid var(--border);}
+
+@media(max-width:760px){
+  .hero h1{font-size:36px;}
+  .pain-grid,.principle-grid,.ck-cols{grid-template-columns:1fr;}
+  .doc-grid{grid-template-columns:1fr;}
+  .compare{font-size:12px;}
+  .compare th,.compare td{padding:10px 12px;}
+}
+</style>
+</head>
+<body>
+<a href="../index.html" style="position:fixed;top:14px;left:16px;z-index:100;background:rgba(255,255,255,.92);color:#4f46e5;padding:6px 15px;border-radius:999px;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 2px 10px rgba(0,0,0,.15);">← 返回首页</a>
+
+<!-- ─────────── HERO ─────────── -->
+<div class="hero">
+  <div class="hero-badge">面向 AI 的项目方法论</div>
+  <h1>用 <em>AI</em> 做项目</h1>
+  <p>把会议变成文档、把执行交给 AI、把人的时间还给真正重要的决策</p>
+  <div class="hero-pills">
+    <div class="pill">文档 <em>代替</em> 会议</div>
+    <div class="pill">AI <em>负责</em> 执行</div>
+    <div class="pill">人 <em>只做</em> 判断</div>
+    <div class="pill">随时可交接</div>
+  </div>
+</div>
+
+<!-- ─────────── 痛点 ─────────── -->
+<section>
+<div class="w">
+  <div class="sec-label">你是否遇到过？</div>
+  <h2 class="sec">这些场景是不是很熟悉</h2>
+  <p class="sec-sub">传统团队协作的问题，不是人不够努力，而是大量时间消耗在了沟通本身。</p>
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="pain-icon">😩</div>
+      <h3>需求讲了三遍，做出来还是偏了</h3>
+      <p>口头说的内容每个人理解不一样，等做完了才发现跑偏了，再返工。</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">📅</div>
+      <h3>会议开完，没人知道结论是什么</h3>
+      <p>两小时的会议，散会后五个人有五个版本的「结论」，执行方向各不相同。</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">🚪</div>
+      <h3>一个人离职，知识就带走了</h3>
+      <p>核心设计都在某人脑子里，没有文档，新来的人要花几个月才能摸清楚。</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ─────────── 根本原因 ─────────── -->
+<section class="alt">
+<div class="w">
+  <div class="big-quote">
+    <p>传统团队把 AI 当工具用，<br>这套方法是把 AI 当<strong>执行者</strong>用。</p>
+    <span>区别在于：谁来做事，谁来判断</span>
+  </div>
+  <div class="principle-grid">
+    <div class="principle-card">
+      <div class="p-icon">📝</div>
+      <h3>文档代替会议</h3>
+      <div class="slogan">「说了就忘，写了才算」</div>
+      <p>所有决定、需求、设计都必须写下来。文档不是会议的补充——文档就是唯一的沟通介质。没写进文档的决定，视为不存在。</p>
+      <div class="example">
+        <strong>实际操作：</strong>开会前先出「会议前文档」，把要讨论的内容写清楚。你会发现，很多会议根本就不需要开了。
+      </div>
+    </div>
+    <div class="principle-card c">
+      <div class="p-icon">🤖</div>
+      <h3>AI 来执行</h3>
+      <div class="slogan">「人想清楚，AI 做出来」</div>
+      <p>写代码、写文档、搭架构、部署上线——这些都可以交给 AI。人的时间应该花在：想清楚要做什么、判断做出来对不对。</p>
+      <div class="example">
+        <strong>实际操作：</strong>把你要的功能写成一段清晰的说明，AI 会给你方案、写代码、解决报错，你来验收。
+      </div>
+    </div>
+    <div class="principle-card g">
+      <div class="p-icon">⏳</div>
+      <h3>异步优先</h3>
+      <div class="slogan">「不等人，随时推进」</div>
+      <p>AI 随时在线，文档随时可读。不需要约好时间一起开会，不需要等某人回复消息，任何时间都可以继续工作。</p>
+      <div class="example">
+        <strong>实际操作：</strong>有问题先问 AI，AI 没法解决再找人。有更新就更新文档，团队看文档，不用等你讲。
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ─────────── 角色变化 ─────────── -->
+<section>
+<div class="w">
+  <div class="sec-label">角色重定义</div>
+  <h2 class="sec">每个人的工作变了什么</h2>
+  <p class="sec-sub">不是减少人，而是每个人把时间花在更值钱的事情上。</p>
+  <div class="compare-wrap">
+  <table class="compare">
+    <thead>
+      <tr>
+        <th class="old">传统做法（做了大量低价值工作）</th>
+        <th class="mid">角色</th>
+        <th class="new">AI-native 做法（把时间花在判断上）</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="old-t">写充满黑话的 PRD 文档，开需求评审会逐行解释</td>
+        <td><span class="role">产品 / PM</span></td>
+        <td class="new-t">写「零黑话」意图文档——说清楚解决什么问题、谁来用、边界是什么。AI 来提方案，你来判断对不对。</td>
+      </tr>
+      <tr>
+        <td class="old-t">写代码、改 bug、等测试、写部署文档……花大量时间在执行上</td>
+        <td><span class="role">开发</span></td>
+        <td class="new-t">把任务描述清楚，让 AI 写代码。你负责验收：AI 的输出符不符合预期，哪里有问题。</td>
+      </tr>
+      <tr>
+        <td class="old-t">写测试用例、手动点点点、记录 bug、沟通复现步骤</td>
+        <td><span class="role">测试</span></td>
+        <td class="new-t">把测试场景写清楚，AI 生成测试用例、执行验证。你来定义「什么叫做对了」。</td>
+      </tr>
+      <tr>
+        <td class="old-t">负责「技术知识传递」，花大量时间给别人讲解</td>
+        <td><span class="role">架构师</span></td>
+        <td class="new-t">把架构设计决定写进文档，AI 帮维护。团队成员有问题，先问 AI，AI 会读文档回答。</td>
+      </tr>
+      <tr>
+        <td class="old-t">发文档、写操作指引、整理会议纪要、出周报</td>
+        <td><span class="role">团队负责人</span></td>
+        <td class="new-t">维护「功能状态表」——一张表看所有功能的进度，不需要每周开会同步。</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+</section>
+
+<!-- ─────────── 工作流 ─────────── -->
+<section class="alt">
+<div class="w">
+  <div class="sec-label cyan">工作流程</div>
+  <h2 class="sec">一个功能从 0 到上线</h2>
+  <p class="sec-sub">每一步谁来做，做什么——不再有模糊地带。</p>
+  <div class="steps">
+
+    <div class="step">
+      <div class="step-spine"><div class="step-num">1</div><div class="step-line"></div></div>
+      <div class="step-body">
+        <h3><span class="who human">人</span> 写清楚「想要什么」</h3>
+        <p>不需要写技术方案，只需要写清楚：<strong>要解决什么问题、谁来用、什么是做对了、边界是什么</strong>。这份文档是后续所有工作的起点。</p>
+        <div class="step-eg">
+          <strong>示例：</strong><br>
+          「我们需要一个优惠券系统。用户购物满一定金额，自动把奖励发进钱包。奖励在退货期过后才能提现。一张券只能用一次，同一笔订单取面值最大的那张。运营要能在后台配置门槛和面值。」
+          <br><br>这样描述就够了——不需要提数据库设计、接口格式。
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-spine"><div class="step-num">2</div><div class="step-line"></div></div>
+      <div class="step-body">
+        <h3><span class="who ai">AI</span> 出方案，<span class="who human">人</span> 来判断</h3>
+        <p>AI 读你的意图文档，给出数据模型、业务流程图、接口设计。<strong>你只需要判断：这个方向对不对。</strong>有不对的地方，用自然语言告诉 AI「这里不对，因为……」，AI 来修正。</p>
+        <div class="step-eg">
+          <strong>你可能需要说的：</strong><br>
+          「钱包的状态分三种，不是两种——还有一个冻结状态（提现审核中）」<br>
+          「多张券叠加这个不对，我们的规则是同一笔订单只能用一张」
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-spine"><div class="step-num">3</div><div class="step-line"></div></div>
+      <div class="step-body">
+        <h3><span class="who ai">AI</span> 执行，<span class="who human">人</span> 来验收</h3>
+        <p>方案确认后，AI 来写代码、写接口文档、建测试。你不需要自己动手写——但你需要验收：<strong>跑一遍真实流程，确认结果符合预期。</strong></p>
+        <div class="step-eg">
+          <strong>验收的标准：</strong><br>
+          把「完成标准」在第 1 步就写清楚。验收就是对照这份清单逐项确认，不是凭感觉。
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-spine"><div class="step-num">4</div><div class="step-line"></div></div>
+      <div class="step-body">
+        <h3><span class="who human">人 + AI</span> 把结果落进文档</h3>
+        <p>功能做完后，把设计决定、数据模型、流程图、可配参数写进设计文档。状态表里更新进度。<strong>文档是工作的产出物，不是额外负担。</strong></p>
+        <div class="step-eg">
+          <strong>一个好规则：</strong>如果一个决定没有写进 git 记录，这个决定不存在。任何口头约定，必须在 24 小时内变成文字。
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-spine"><div class="step-num">5</div></div>
+      <div class="step-body last">
+        <h3><span class="who human">人</span> 发链接，团队自己来看</h3>
+        <p>文档更新后，把链接发给团队。<strong>不需要开会讲解，不需要等所有人在线。</strong>有问题让大家在文档里留言，或者直接问 AI。</p>
+        <div class="step-eg">
+          <strong>新人入职的第一天：</strong><br>
+          给他一个链接——项目总纲。他可以从总纲点进各个模块，不理解的名词有悬浮解释，有问题直接问 AI。不需要「师傅带」。
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ─────────── 文档体系 ─────────── -->
+<section>
+<div class="w">
+  <div class="sec-label ok">文档体系</div>
+  <h2 class="sec">一个项目需要哪些文档</h2>
+  <p class="sec-sub">4 种文档，职责单一，互相指向。每篇是独立的单文件，AI 随时可读。</p>
+  <div class="doc-grid">
+    <div class="doc-card">
+      <div class="doc-icon b">📖</div>
+      <div>
+        <h3>业务总纲</h3>
+        <code>overview.html</code>
+        <p>一页读懂整个项目。解释这个产品是做什么的、给谁用、钱从哪来、用户的完整路径。<strong>第一篇写，永远置顶。</strong>非技术背景的人看完也要能明白。</p>
+      </div>
+    </div>
+    <div class="doc-card">
+      <div class="doc-icon c">🔀</div>
+      <div>
+        <h3>场景流程</h3>
+        <code>scenario-N.html</code>
+        <p>把用户旅程切成几段，每段一篇。用流程图描述：这个场景下用户做什么、系统做什么、可能出什么问题、运营可以调哪些参数。</p>
+      </div>
+    </div>
+    <div class="doc-card">
+      <div class="doc-icon y">⚙️</div>
+      <div>
+        <h3>设计方案</h3>
+        <code>*-design.html</code>
+        <p>需要深入设计的模块——数据模型、业务规则、现状和待做的差距、实现分期。<strong>是代码的「说明书」，和代码同步更新。</strong></p>
+      </div>
+    </div>
+    <div class="doc-card">
+      <div class="doc-icon g">📊</div>
+      <div>
+        <h3>全盘状态表</h3>
+        <code>feature-status.html</code>
+        <p>一张表看所有功能做到哪了——三色状态（✅已完成 / 🔵进行中 / 🟡待做）。这张表代替周报、代替站会，<strong>是团队唯一的进度真值来源。</strong></p>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:20px;background:var(--brand-soft);border-radius:12px;padding:16px 20px;font-size:13.5px;color:var(--brand-dark);line-height:1.7;">
+    <strong>📌 两条铁律：</strong>①「单一真值」——同一个数值/状态只在一个地方定义，其它文档指向它，不复制；②「零黑话」——任何术语，业务、运营、新人、测试都能看懂，必要时加悬浮注释。
+  </div>
+</div>
+</section>
+
+<!-- ─────────── 30天起步 ─────────── -->
+<section class="alt">
+<div class="w">
+  <div class="sec-label warn">30 天起步</div>
+  <h2 class="sec">新项目 / 新团队怎么开始</h2>
+  <p class="sec-sub">不需要买任何工具，不需要培训，按这个清单走就行。</p>
+  <div class="ck-cols">
+    <div class="ck-week">
+      <h3>第一步 <span>想清楚，写出来</span></h3>
+      <ul>
+        <li><span class="ck-box"></span>建一个 Git 仓库，放所有文档（不用 Notion/Confluence）</li>
+        <li><span class="ck-box"></span>写第一篇 overview.html——一页讲清楚整个项目</li>
+        <li><span class="ck-box"></span>定「唯一真值来源」：数值以哪个地方为准，写进文档</li>
+        <li><span class="ck-box"></span>列出项目「禁用词」：有哪些词是黑话，统一替换成白话</li>
+        <li><span class="ck-box"></span>把现有的口头约定，全部整理成文字落进文档</li>
+      </ul>
+    </div>
+    <div class="ck-week">
+      <h3>第二步 <span>跑通第一个流程</span></h3>
+      <ul>
+        <li><span class="ck-box"></span>选一个最小功能，按「5步工作流」完整跑一遍</li>
+        <li><span class="ck-box"></span>用 AI 出方案，人来判断，记录「判断了什么，为什么」</li>
+        <li><span class="ck-box"></span>建 feature-status.html，把这个功能的状态填进去</li>
+        <li><span class="ck-box"></span>把做的过程中遇到的决定，全部写进设计文档</li>
+        <li><span class="ck-box"></span>发给团队一个链接，不用讲解，看有没有人能自己读懂</li>
+      </ul>
+    </div>
+    <div class="ck-week">
+      <h3>第三步 <span>变成习惯</span></h3>
+      <ul>
+        <li><span class="ck-box"></span>取消一个例行会议，改成「更新文档 + 看文档」</li>
+        <li><span class="ck-box"></span>新功能上线前，先更新状态表，不口头通知</li>
+        <li><span class="ck-box"></span>有人问「这个怎么做的」，第一反应是给链接，不是开会</li>
+        <li><span class="ck-box"></span>新人入职，把文档链接给他，看他能不能自己搞懂 80%</li>
+        <li><span class="ck-box"></span>如果搞不懂——说明文档还不够清楚，继续完善</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ─────────── 常见坑 ─────────── -->
+<section>
+<div class="w">
+  <div class="sec-label">常见陷阱</div>
+  <h2 class="sec">这些坑大多数团队都会踩</h2>
+  <p class="sec-sub">提前知道，就可以提前绕开。</p>
+  <div class="trap-list">
+    <div class="trap">
+      <div class="trap-num">1</div>
+      <div>
+        <h4>「先做，后来再补文档」</h4>
+        <p>做完了就不会回来补文档了。<span class="fix">→ 文档和代码同步：做完一步，记录一步。</span></p>
+      </div>
+    </div>
+    <div class="trap">
+      <div class="trap-num">2</div>
+      <div>
+        <h4>意图没写清楚，怪 AI 做偏了</h4>
+        <p>AI 根据你说的做，如果输出跑偏，通常是输入不够清晰。<span class="fix">→ 在意图文档里明确写「完成标准是什么」。</span></p>
+      </div>
+    </div>
+    <div class="trap">
+      <div class="trap-num">3</div>
+      <div>
+        <h4>AI 输出没有验收就直接用</h4>
+        <p>AI 不会犯人会犯的错，但 AI 有自己的误区。每个产出物都需要人来验收。<span class="fix">→ 建立「验收清单」，逐项对照。</span></p>
+      </div>
+    </div>
+    <div class="trap">
+      <div class="trap-num">4</div>
+      <div>
+        <h4>文档和代码越来越不一致</h4>
+        <p>代码改了，文档没更新；下次 AI 读文档给出的方案就是错的。<span class="fix">→ 代码 commit 里必须引用对应文档，改代码时检查文档是否需要同步更新。</span></p>
+      </div>
+    </div>
+    <div class="trap">
+      <div class="trap-num">5</div>
+      <div>
+        <h4>团队成员不适应，继续用口头沟通</h4>
+        <p>习惯很难改变，有些人天然喜欢开会。<span class="fix">→ 不强迫，但设一条规则：口头决定必须在 24 小时内写进文档，否则无效。</span></p>
+      </div>
+    </div>
+    <div class="trap">
+      <div class="trap-num">6</div>
+      <div>
+        <h4>「这个让 AI 做就行了」——把判断也交给 AI</h4>
+        <p>AI 负责执行，人负责判断。业务方向、架构边界、关键设计取舍——这些必须由人来决定。<span class="fix">→ 明确哪些事 AI 做，哪些事人决定，不能模糊。</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ─────────── 总结 ─────────── -->
+<section class="alt" style="padding:60px 0;">
+<div class="w" style="text-align:center;">
+  <div class="sec-label">核心记住这一句</div>
+  <h2 class="sec" style="max-width:640px;margin:8px auto 20px;">人负责「想清楚」，AI 负责「做出来」，文档是唯一的通信介质</h2>
+  <p style="font-size:15px;color:var(--ink-soft);max-width:520px;margin:0 auto 32px;">
+    这不是一套复杂的方法论，就是一个习惯的转变：<br>
+    把脑子里的东西写出来，然后让 AI 去执行。
+  </p>
+  <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+    <div style="background:var(--brand-soft);border-radius:10px;padding:14px 22px;font-size:14px;font-weight:600;color:var(--brand-dark);">📄 文档 &gt; 会议</div>
+    <div style="background:var(--cyan-soft);border-radius:10px;padding:14px 22px;font-size:14px;font-weight:600;color:#164e63;">🤖 AI 执行，人判断</div>
+    <div style="background:var(--ok-soft);border-radius:10px;padding:14px 22px;font-size:14px;font-weight:600;color:#14532d;">🔗 单一真值来源</div>
+    <div style="background:#fffbeb;border-radius:10px;padding:14px 22px;font-size:14px;font-weight:600;color:#78350f;">⏳ 异步优先</div>
+  </div>
+</div>
+</section>
+
+<footer>用 AI 做项目 · 面向 AI 的项目方法论手册 · 版本 1.0</footer>
+
+</body>
+</html>

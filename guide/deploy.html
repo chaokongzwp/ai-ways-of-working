@@ -1,0 +1,162 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>上线 + 访问门禁 · 实操</title>
+<!-- <script src="../docs/assets/auth-guard.js"></script> -->
+<style>
+  :root{ /* ← 换项目只改这一段 */
+    --brand:#f9c74f; --brand-dark:#e07c00; --brand-soft:#fef3c7;
+    --ink:#1a1410; --ink-soft:#4a3f33; --ink-faint:#8b7355;
+    --bg:#faf7f0; --paper:#fff; --border:#e8d9b8; --ok:#15803d; --wip:#1d4ed8; --todo:#c2410c; }
+  *{box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;margin:0;padding:28px 16px 70px;}
+  .container{max-width:1080px;margin:0 auto;}
+  a.back{display:inline-block;margin-bottom:6px;color:var(--brand-dark);font-weight:700;font-size:13px;text-decoration:none;}
+  header{text-align:center;margin-bottom:12px;}
+  header h1{font-size:23px;color:var(--brand-dark);margin:0 0 6px;}
+  header .sub{color:var(--ink-faint);font-size:14px;}
+  h2.sec{font-size:18px;border-left:5px solid var(--brand);padding-left:12px;margin:30px 0 12px;}
+  h3.sub3{font-size:15px;color:var(--brand-dark);margin:20px 0 8px;}
+  .intro{background:linear-gradient(135deg,var(--brand-soft),#fff7e0);border:1px solid var(--brand);border-radius:14px;padding:14px 22px;margin:0 0 20px;line-height:1.85;font-size:14px;}
+  .intro b{color:var(--brand-dark);}
+  .flowwrap{background:var(--paper);border:1px solid var(--border);border-radius:12px;padding:14px 8px;overflow-x:auto;}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin:12px 0 0;font-size:12.5px;color:var(--ink-soft);}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .dot{width:12px;height:12px;border-radius:3px;display:inline-block;border:1px solid;}
+  .warn{background:#fff5f5;border:2px solid #dc2626;border-radius:10px;padding:13px 18px;font-size:13px;color:var(--ink-soft);margin-top:14px;line-height:1.8;}
+  .warn b{color:#dc2626;}
+  .note{background:var(--brand-soft);border-radius:10px;padding:14px 18px;font-size:13px;color:var(--ink-soft);margin-top:14px;line-height:1.85;}
+  .note b{color:var(--ink);}
+  code{background:#f1f5f9;padding:1px 6px;border-radius:5px;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#6d28d9;}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:8px;}
+  th,td{border:1px solid var(--border);padding:9px 12px;text-align:left;vertical-align:top;line-height:1.6;}
+  th{background:var(--brand-soft);font-weight:700;}
+  .st{display:inline-block;font-size:12px;padding:1px 9px;border-radius:999px;font-weight:700;}
+  .st.done{background:#f0fdf4;color:var(--ok);} .st.wip{background:#eff6ff;color:var(--wip);} .st.todo{background:#fff7ed;color:var(--todo);}
+  footer{text-align:center;margin-top:38px;color:var(--ink-faint);font-size:12px;}
+  pre.code{background:#1a1410;color:#f0e6d2;border-radius:10px;padding:14px 16px;overflow-x:auto;font-family:ui-monospace,Menlo,monospace;font-size:12px;line-height:1.6;margin-top:10px;white-space:pre;}
+  pre.code code{background:none;color:inherit;padding:0;font-size:12px;}
+  ul,ol{font-size:14px;line-height:1.8;} li{margin:3px 0;}
+</style>
+</head><body><div class="container">
+<a class="back" href="../index.html">← 返回首页</a>
+<header><h1>🚀 上线 + 访问门禁</h1><div class="sub">OSS/CDN 部署 · 飞书登录门禁 · 变更通知（含踩过的坑）</div></header>
+
+<div class="intro">文档写好后，怎么让团队访问、怎么<b>只让组织内部人能看</b>、怎么在更新后自动通知。<br>本文是这套方法落地时踩过坑后的实操总结。</div>
+
+<h2 class="sec">一、上线：两种姿势</h2>
+
+<p>文档站是<b>纯静态 HTML</b>（<code>docs/*.html</code> + <code>docs/assets/</code>），没有构建步骤，部署很轻。</p>
+
+<h3 class="sub3">A. OSS + CDN（推荐：对外 / 多人 / 全球加速）</h3>
+
+<p>文档扔对象存储（OSS），CDN 加速 + 绑域名。</p>
+
+<pre class="code"><code>export ALIYUN_ACCESS_KEY_ID=xxx ALIYUN_ACCESS_KEY_SECRET=xxx   # 需 OSS 读写 + CDN 刷新权限
+export OSS_BUCKET=your-doc-bucket
+export CDN_DOMAIN=docs.example.com      # 可选；留空只传 OSS、不刷 CDN
+bash scripts/deploy-oss-cdn.sh</code></pre>
+
+<p>脚本做的事：</p>
+<ul>
+  <li><code>docs/assets/</code>（mermaid 等）→ <b>长缓存</b> <code>max-age=31536000</code></li>
+  <li>其余 <code>*.html</code> → <b><code>no-cache</code></b>，改了就即时生效（关键，见「坑 ①」）</li>
+  <li><code>CDN_DOMAIN</code> 非空时调 <code>refresh-cdn.py</code> 刷阿里云 CDN</li>
+</ul>
+
+<div class="note"><b>CDN 是哪家？</b> 阿里云 CDN 用 <code>scripts/refresh-cdn.py</code>（脚本自动调）；<b>七牛云 / 其他 CDN</b> 上传 OSS 后去各自控制台刷缓存（脚本会提示）。</div>
+
+<h3 class="sub3">B. ECS / VPS nginx 直连 + Let's Encrypt（推荐：自主可控 / 和后端同机）</h3>
+
+<p>DNS A 记录指到服务器 → nginx 托管 <code>docs/</code> 静态 + certbot 签 HTTPS。</p>
+
+<pre class="code"><code>server {
+  server_name docs.example.com;
+  root /var/www/your-docs;        # 把 docs/ 同步到这里
+  index index.html;
+  location / { try_files $uri $uri/ /index.html; }
+  # certbot --nginx -d docs.example.com 自动补 443 + 80→443 跳转
+}</code></pre>
+
+<p><b>和后端同机的最大好处：门禁可以「同源」，省掉所有跨域 CORS 麻烦</b>（见下）。</p>
+
+<h2 class="sec">二、访问门禁：飞书登录（只让组织内部人看）</h2>
+
+<p>静态站本身不能鉴权。做法是一段 <b>JS 门禁</b>（<code>docs/assets/auth-guard.js</code>）在页面渲染前拦截：</p>
+
+<pre class="code"><code>①无 session → 跳 后端 /auth/feishu/login → 飞书授权页
+②飞书回调后端 /callback → 后端校验 tenant_key（组织标识）→ 建 session → 跳回文档站带 session
+③门禁 JS 存 session → 调 后端 /verify 校验 → 通过才显示页面；失败回 ①</code></pre>
+
+<h3 class="sub3">需要三样东西</h3>
+
+<ol>
+  <li><b>一个后端服务</b>，提供三个接口：
+    <ul>
+      <li><code>GET /auth/feishu/login?redirect=&lt;回跳地址&gt;</code> → 302 到飞书授权页</li>
+      <li><code>GET /auth/feishu/callback?code&amp;state</code> → 换 token、校验组织、建 session、跳回</li>
+      <li><code>GET /auth/feishu/verify</code>（带 <code>Authorization: Bearer &lt;session&gt;</code>）→ 200/401</li>
+      <li>（这套接口和具体后端技术栈绑定，本规范不含后端代码；逻辑见本文「后端接口要点」）</li>
+    </ul>
+  </li>
+  <li><b>飞书开放平台</b>配置：
+    <ul>
+      <li>拿 <code>app_id</code> / <code>app_secret</code></li>
+      <li>「安全设置 → 重定向 URL」白名单加 <code>{后端}/auth/feishu/callback</code></li>
+      <li>组织 <code>tenant_key</code>（登录后校验用户属不属于本组织）</li>
+    </ul>
+  </li>
+  <li><b>门禁脚本</b> <code>docs/assets/auth-guard.js</code>：把里面的后端 base url 改成你的。</li>
+</ol>
+
+<h3 class="sub3">后端接口要点（伪代码，照搬到任意语言）</h3>
+
+<pre class="code"><code>login:    state=随机存Redis(5min); redirect_uri = scheme://本次请求Host + /auth/feishu/callback
+          → 302 https://open.feishu.cn/open-apis/authen/v1/authorize?app_id&amp;redirect_uri&amp;state
+callback: 校验state; code 换 app_access_token → user_access_token → user_info
+          if user_info.tenant_key != 配置的组织tenant_key: 403
+          sessionId=随机; Redis存 session(7d); 302 回 redirect 带 ?session=sessionId
+verify:   读 Authorization: Bearer; Redis 查 session; 命中 200 否则 401</code></pre>
+
+<h3 class="sub3">⚠️ 踩过的坑（务必看）</h3>
+
+<table>
+  <thead><tr><th class="k">坑</th><th>说明</th><th>对策</th></tr></thead>
+  <tbody>
+    <tr><td class="k"><b>① CDN 缓存旧门禁</b></td><td>门禁 JS / index.html 被 CDN 缓存，改了不生效</td><td>这俩<span style="color:#dc2626;font-weight:700">必须 <code>no-cache</code></span>（部署脚本已做）；CDN 该刷还得刷</td></tr>
+    <tr><td class="k"><b>② tenant_key ≠ 企业编号</b></td><td>企业编号长 <code>FExxxxxxx</code>，<span style="color:#dc2626;font-weight:700">不是</span> tenant_key</td><td>tenant_key 是 OAuth <code>user_info</code> 返回的 <b>16 位 hex</b>；先跑一次登录从日志抓真值</td></tr>
+    <tr><td class="k"><b>③ callback 域名写死</b></td><td>一套后端服务多个前端域名时，回调会跳错域名</td><td>login 用 <code>X-Forwarded-Host</code> <b>动态生成</b> callback，跟随入口域名；<span style="color:#dc2626;font-weight:700">仅信任你的主域防注入</span></td></tr>
+    <tr><td class="k"><b>④ 跨子域 CORS</b></td><td>前端 <code>docs.x.com</code> 调后端 <code>api.x.com/verify</code> 被 CORS 拦</td><td>后端放行 <code>https://*.x.com</code>；<b>或前端后端同机同源</b>（姿势 B），彻底免 CORS</td></tr>
+    <tr><td class="k"><b>⑤ 协议不一致</b></td><td>http 文档站调 https 后端，preflight 跟随重定向失败</td><td>门禁 JS 里 apiBase <span style="color:#dc2626;font-weight:700">固定 https</span></td></tr>
+  </tbody>
+</table>
+
+<h2 class="sec">三、变更通知（可选）：文档更新发飞书</h2>
+
+<p>CI 里文档 push 后跑 <code>scripts/feishu-doc-change-notify.mjs</code>，往飞书群发一张卡片（仓库 / 提交 / 改了哪些文件 / 一键查看链接）。</p>
+
+<pre class="code"><code># 二选一：群机器人 webhook
+export FEISHU_WEBHOOK_URL=https://open.feishu.cn/open-apis/bot/v2/hook/xxx
+export FEISHU_WEBHOOK_SECRET=xxx                 # 可选（群机器人开了签名校验才需要）
+# 或：应用机器人
+export FEISHU_APP_ID=cli_xxx FEISHU_APP_SECRET=xxx FEISHU_CHAT_ID=oc_xxx
+
+export DOC_CHANGE_SUMMARY="$(git log -1 --pretty=%s)"
+export DOC_CHANGE_FILES="$(git diff --name-only HEAD~1 HEAD)"
+export DOC_CHANGE_URL="https://github.com/org/repo/commit/$(git rev-parse HEAD)"
+node scripts/feishu-doc-change-notify.mjs</code></pre>
+
+<p>干跑预览：<code>FEISHU_NOTIFY_DRY_RUN=1 node scripts/feishu-doc-change-notify.mjs</code>（只打印卡片 JSON 不发送）。</p>
+
+<h2 class="sec">四、最小上线 checklist</h2>
+
+<ol>
+  <li><b>发布</b>：<code>export OSS_BUCKET + ALIYUN key</code> → <code>bash scripts/deploy-oss-cdn.sh</code></li>
+  <li><b>（可选）门禁</b>：起后端三接口 + 飞书 app 配置 + 改 <code>auth-guard.js</code> 的 apiBase</li>
+  <li><b>（可选）通知</b>：CI 加一步 <code>feishu-doc-change-notify.mjs</code></li>
+  <li><b>团队只记一个地址</b>：文档站的 <code>index.html</code></li>
+</ol>
+
+<div class="note">没有门禁需求就跳过第 2 步——文档站照样能用，只是公开可访问。</div>
+
+<footer>AI 工作方式 · 上线 + 门禁实操</footer>
+</div></body></html>

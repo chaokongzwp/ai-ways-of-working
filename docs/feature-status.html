@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>〔项目〕· 全盘状态表</title>
+<!-- 启用飞书门禁：取消下一行注释（见 DEPLOY.md 二）-->
+<!-- <script src="./assets/auth-guard.js"></script> -->
+<style>
+  :root{ /* ← 换项目只改这一段 */
+    --brand:#f9c74f; --brand-dark:#e07c00; --brand-soft:#fef3c7;
+    --ink:#1a1410; --ink-soft:#4a3f33; --ink-faint:#8b7355;
+    --bg:#faf7f0; --paper:#fff; --border:#e8d9b8; --ok:#15803d; --wip:#1d4ed8; --todo:#c2410c; }
+  *{box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;margin:0;padding:28px 16px 70px;}
+  .container{max-width:1000px;margin:0 auto;}
+  a.back{display:inline-block;margin-bottom:6px;color:var(--brand-dark);font-weight:700;font-size:13px;text-decoration:none;}
+  header{text-align:center;margin-bottom:12px;}
+  header h1{font-size:23px;color:var(--brand-dark);margin:0 0 6px;}
+  header .sub{color:var(--ink-faint);font-size:14px;}
+  h2.sec{font-size:18px;border-left:5px solid var(--brand);padding-left:12px;margin:30px 0 12px;}
+  .summary{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:14px 0 6px;}
+  .scard{background:var(--paper);border:1px solid var(--border);border-radius:12px;padding:12px 22px;text-align:center;min-width:120px;}
+  .scard .n{font-size:26px;font-weight:800;}
+  .scard .l{font-size:12.5px;color:var(--ink-faint);margin-top:2px;}
+  .scard.done .n{color:var(--ok);} .scard.wip .n{color:var(--wip);} .scard.todo .n{color:var(--todo);}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:8px;}
+  th,td{border:1px solid var(--border);padding:9px 12px;text-align:left;vertical-align:top;line-height:1.6;}
+  th{background:var(--brand-soft);font-weight:700;}
+  td.k{font-weight:700;white-space:nowrap;}
+  .st{display:inline-block;font-size:12px;padding:1px 9px;border-radius:999px;font-weight:700;white-space:nowrap;}
+  .st.done{background:#f0fdf4;color:var(--ok);} .st.wip{background:#eff6ff;color:var(--wip);} .st.todo{background:#fff7ed;color:var(--todo);}
+  .note{background:var(--brand-soft);border-radius:10px;padding:14px 18px;font-size:13px;color:var(--ink-soft);margin-top:14px;line-height:1.85;}
+  .note b{color:var(--ink);}
+  footer{text-align:center;margin-top:38px;color:var(--ink-faint);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="container">
+<a class="back" href="./index.html">← 返回文档导航</a>
+<header>
+  <h1>📊 〔项目〕· 全盘状态表</h1>
+  <div class="sub">一张表看所有功能做到哪了 · 现状 vs 待做</div>
+</header>
+
+<!-- 计数（手动更新或脚本生成）-->
+<div class="summary">
+  <div class="scard done"><div class="n">〔N〕</div><div class="l">✅ 已完成</div></div>
+  <div class="scard wip"><div class="n">〔N〕</div><div class="l">🔵 部分待验</div></div>
+  <div class="scard todo"><div class="n">〔N〕</div><div class="l">🟡 待完成</div></div>
+</div>
+
+<h2 class="sec">〔域一：核心业务〕</h2>
+<table>
+  <thead><tr><th>功能</th><th>实现</th><th>状态</th><th>备注 / 待办</th></tr></thead>
+  <tbody>
+    <tr><td class="k">〔功能 A〕</td><td>〔模块/接口〕</td><td><span class="st done">✅ 已完成</span></td><td>〔—〕</td></tr>
+    <tr><td class="k">〔功能 B〕</td><td>〔模块/接口〕</td><td><span class="st wip">🔵 部分待验</span></td><td>〔待验什么〕</td></tr>
+    <tr><td class="k">〔功能 C〕</td><td>〔—〕</td><td><span class="st todo">🟡 待完成</span></td><td>〔缺什么〕</td></tr>
+  </tbody>
+</table>
+
+<h2 class="sec">〔域二：系统 / 平台〕</h2>
+<table>
+  <thead><tr><th>功能</th><th>实现</th><th>状态</th><th>备注 / 待办</th></tr></thead>
+  <tbody>
+    <tr><td class="k">〔鉴权 / 部署 / 监控…〕</td><td>〔—〕</td><td><span class="st todo">🟡 待完成</span></td><td>〔—〕</td></tr>
+  </tbody>
+</table>
+
+<h2 class="sec">缺口清单（按优先级）</h2>
+<div class="note">
+  · <b>P0（上线前必做）</b>：〔…〕<br>
+  · <b>P1</b>：〔…〕<br>
+  · <b>P2 / 第二阶段</b>：〔…〕
+</div>
+
+<footer>〔项目〕· 全盘状态表 · 状态以〔线上〕为准 · 每次发版同步更新</footer>
+</div>
+</body>
+</html>

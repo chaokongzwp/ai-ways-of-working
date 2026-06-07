@@ -1,0 +1,317 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文档体系方法论 · 用 HTML 当 PRD</title>
+<!-- <script src="../docs/assets/auth-guard.js"></script> -->
+<style>
+  :root{ /* ← 换项目只改这一段 */
+    --brand:#f9c74f; --brand-dark:#e07c00; --brand-soft:#fef3c7;
+    --ink:#1a1410; --ink-soft:#4a3f33; --ink-faint:#8b7355;
+    --bg:#faf7f0; --paper:#fff; --border:#e8d9b8; --ok:#15803d; --wip:#1d4ed8; --todo:#c2410c; }
+  *{box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;margin:0;padding:28px 16px 70px;}
+  .container{max-width:1080px;margin:0 auto;}
+  a.back{display:inline-block;margin-bottom:6px;color:var(--brand-dark);font-weight:700;font-size:13px;text-decoration:none;}
+  header{text-align:center;margin-bottom:12px;}
+  header h1{font-size:23px;color:var(--brand-dark);margin:0 0 6px;}
+  header .sub{color:var(--ink-faint);font-size:14px;}
+  h2.sec{font-size:18px;border-left:5px solid var(--brand);padding-left:12px;margin:30px 0 12px;}
+  h3.sub3{font-size:15px;color:var(--brand-dark);margin:20px 0 8px;}
+  .intro{background:linear-gradient(135deg,var(--brand-soft),#fff7e0);border:1px solid var(--brand);border-radius:14px;padding:14px 22px;margin:0 0 20px;line-height:1.85;font-size:14px;}
+  .intro b{color:var(--brand-dark);}
+  .flowwrap{background:var(--paper);border:1px solid var(--border);border-radius:12px;padding:14px 8px;overflow-x:auto;}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin:12px 0 0;font-size:12.5px;color:var(--ink-soft);}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .dot{width:12px;height:12px;border-radius:3px;display:inline-block;border:1px solid;}
+  .warn{background:#fff5f5;border:2px solid #dc2626;border-radius:10px;padding:13px 18px;font-size:13px;color:var(--ink-soft);margin-top:14px;line-height:1.8;}
+  .warn b{color:#dc2626;}
+  .note{background:var(--brand-soft);border-radius:10px;padding:14px 18px;font-size:13px;color:var(--ink-soft);margin-top:14px;line-height:1.85;}
+  .note b{color:var(--ink);}
+  code{background:#f1f5f9;padding:1px 6px;border-radius:5px;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#6d28d9;}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:8px;}
+  th,td{border:1px solid var(--border);padding:9px 12px;text-align:left;vertical-align:top;line-height:1.6;}
+  th{background:var(--brand-soft);font-weight:700;}
+  .st{display:inline-block;font-size:12px;padding:1px 9px;border-radius:999px;font-weight:700;}
+  .st.done{background:#f0fdf4;color:var(--ok);} .st.wip{background:#eff6ff;color:var(--wip);} .st.todo{background:#fff7ed;color:var(--todo);}
+  footer{text-align:center;margin-top:38px;color:var(--ink-faint);font-size:12px;}
+  pre.code{background:#1a1410;color:#f0e6d2;border-radius:10px;padding:14px 16px;overflow-x:auto;font-family:ui-monospace,Menlo,monospace;font-size:12px;line-height:1.6;margin-top:10px;white-space:pre;}
+  pre.code code{background:none;color:inherit;padding:0;font-size:12px;}
+  ul,ol{font-size:14px;line-height:1.8;} li{margin:3px 0;}
+</style>
+</head><body><div class="container">
+<a class="back" href="../index.html">← 返回首页</a>
+<header><h1>📐 文档体系方法论</h1><div class="sub">用 HTML 单文件当 PRD · 7 原则 · 6 层结构 · 可抄代码片段</div></header>
+
+<div class="intro">这份是「BeeX 用 HTML 文件当 PRD」这套做法的<b>方法论提炼</b>,目的是让<b>另一个项目照着同样思路从 0 搭一套</b>。<br>用 BeeX 当例子,但规则都是通用的——换项目时把业务词换掉、把配色 token 换掉即可。</div>
+
+<h2 class="sec">0. 一句话</h2>
+<div class="note">把 PRD 拆成<b>「一页总纲 + N 个场景流程图 + 若干设计方案 + 一张全盘状态表」</b>,<br>每篇是<b>一个零依赖的 HTML 单文件</b>,内联一套设计系统,流程图用<b>本地 Mermaid</b>(文本即图),<br>全程<b>无黑话、单一真值来源、统一状态徽章</b>,<code>file://</code> 双击即看、git 管理、零构建。</div>
+
+<h2 class="sec">1. 七条核心原则(为什么这么做)</h2>
+<table>
+  <thead><tr><th>原则</th><th>含义</th><th>落地动作</th></tr></thead>
+  <tbody>
+    <tr><td class="k"><b>① 无黑话</b></td><td>任何术语,团长/运营/新人/测试都能看懂</td><td>维护一个「禁用词表」(BeeX 禁:双轨/Mentor/cascade),review 时扫</td></tr>
+    <tr><td class="k"><b>② 一页读懂优先</b></td><td>先有一篇「业务总纲」一页讲清整个生意怎么转,再深入</td><td><code>overview.html</code> 永远是第一篇,导航里用大卡片置顶</td></tr>
+    <tr><td class="k"><b>③ 单一真值来源</b></td><td>数值/状态只在一个地方定义,其它文档<b>指向</b>它而非复制</td><td>每页页脚写「数值一律以 X(线上/设计稿)为准」;不在多篇里抄同一个数</td></tr>
+    <tr><td class="k"><b>④ 受众驱动分层</b></td><td>同一篇要同时服务 业务/运营/测试/开发</td><td>主体讲业务;<code>warn</code> 框放「开发/测试铁律」;<code>可配参数表</code>放运营</td></tr>
+    <tr><td class="k"><b>⑤ 现状对照</b></td><td>每个功能/设计都标「现状 vs 待做」</td><td>三色状态徽章 ✅已完成 / 🔵部分待验 / 🟡待完成,贯穿全库</td></tr>
+    <tr><td class="k"><b>⑥ 零构建可移植</b></td><td>不打包、不跑服务器,双击即看</td><td>纯 HTML 单文件 + 内联 CSS + 本地 Mermaid;不依赖 CDN/框架</td></tr>
+    <tr><td class="k"><b>⑦ 改图=改文本</b></td><td>流程图不画图,用文本描述</td><td>全部用 Mermaid;改流程就是改几行文本,diff 友好、AI 友好</td></tr>
+  </tbody>
+</table>
+
+<h2 class="sec">2. 文档体系结构(分层)</h2>
+<p>一套文档分 6 层,职责单一、互相指向:</p>
+<pre class="code"><code>①  导航 hub        index.html              ← 所有入口 + 状态徽章 + 「先读这个」大卡片
+②  业务总纲        overview.html           ← 一页读懂整个生意(必读,第一篇)
+③  场景流程        scenario-N-flow.html    ← 用户旅程切片,每片一篇(Mermaid 流程图)
+④  设计方案        *-design.html           ← 需要深入设计的模块(模型→流程→现状vs待做)
+⑤  平台/架构/安全  architecture / auth …   ← 部署、鉴权、技术对齐
+⑥  全盘状态        feature-status.html     ← 一张表看所有功能做到哪了
+   参考/归档       assets/ _archive/ *.md  ← 本地 Mermaid+图、旧版归档、API/集成/QA 补充</code></pre>
+
+<p><b>BeeX 实例对照</b>(22 个 HTML):</p>
+<ul>
+  <li>① <code>index.html</code></li>
+  <li>② <code>overview.html</code></li>
+  <li>③ <code>scenario-1..8-flow-v2.html</code>(8 个场景:裂变/首购/升级/分佣/提现/机器人/券…)</li>
+  <li>④ <code>coupon-system-design.html</code>、<code>income-and-activities-design.html</code>、<code>campaign-placements-design.html</code></li>
+  <li>⑤ <code>beex-architecture.html</code>、<code>auth-design.html</code></li>
+  <li>⑥ <code>feature-status.html</code></li>
+  <li>参考:<code>assets/mermaid.min.js</code>、<code>_archive/</code>(旧版)、<code>api/*.md</code>、<code>prd/*.md</code>、<code>integrations/*.md</code>、<code>qa/*.md</code></li>
+</ul>
+
+<div class="note">关键:<b>导航 hub(①)是唯一入口</b>,团队只记一个地址,其它全从这里点进去。</div>
+
+<h2 class="sec">3. 每类文档的「固定套路」(模板骨架)</h2>
+
+<h3 class="sub3">③ 场景流程页(最高频,务必模板化)</h3>
+<pre class="code"><code>← 返回文档导航
+header(h1 标题 + sub 副标题)
+&lt;div class="intro"&gt;      一句话引子:这个场景在讲什么、给谁看
+&lt;h2 class="sec"&gt;一、主流程图
+  &lt;pre class="mermaid"&gt; flowchart … &lt;/pre&gt;     ← 核心:流程图
+  &lt;div class="legend"&gt;  图例(节点颜色含义)
+&lt;div class="warn"&gt;       🚨 铁律(开发/测试必看的硬规则,红框)
+&lt;div class="note"&gt;       📌 要点补充
+&lt;!-- CFG-PARAMS --&gt;      ⚙️ 本场景可配参数(运营后台能调的:参数/初始值/配置位置/状态)
+&lt;footer&gt;                 真值来源声明</code></pre>
+
+<h3 class="sub3">④ 设计方案页</h3>
+<pre class="code"><code>draft 状态条(🟡 设计稿/评审中)
+intro(本稿覆盖哪几件事 + 依赖关系)
+数据模型表(字段/口径)
+流程(Mermaid 或分步)
+「现状 vs 待做」表 + 分期(P1/P2/P3)
+「真正残留」note(把没做完的单独拎出来,不混在已交付里)</code></pre>
+
+<h3 class="sub3">② 业务总纲页(一页读懂)</h3>
+<p>固定回答 5 个问题(BeeX 的章节就是范本):</p>
+<ol>
+  <li><b>有哪几种人</b>(角色 + 谁赚得多)</li>
+  <li><b>钱从哪来、怎么一层层分</b></li>
+  <li><b>怎么把盘子做大</b>(裂变 + 升级)</li>
+  <li><b>一个人的完整旅程</b>(从进来到做到顶)</li>
+  <li><b>接下来看哪</b>(指向各场景)</li>
+</ol>
+
+<h3 class="sub3">⑥ 全盘状态表</h3>
+<pre class="code"><code>summary 卡:✅N / 🔵N / 🟡N 计数
+按域分表:功能 | 实现 | 状态徽章 | 备注/待办
+缺口清单:按优先级(P0上线前/P1/P2/第二阶段)</code></pre>
+
+<h3 class="sub3">① 导航 hub</h3>
+<pre class="code"><code>hero:一句话原则声明(「不用任何黑话」「数值以…为准」)
+lead-card:大卡片置顶「先读这个」(总纲 + 全盘状态表)
+card grid:按域分组(裂变/核心业务/系统/设计/平台),每张卡带状态徽章
+footer:真值来源</code></pre>
+
+<h2 class="sec">4. 统一规范(让 N 个散文件像「一套」)</h2>
+<table>
+  <thead><tr><th>规范</th><th>做法</th></tr></thead>
+  <tbody>
+    <tr><td class="k"><b>单文件自包含</b></td><td>每个 <code>.html</code> 内联自己的 <code>&lt;style&gt;</code>,<b>不依赖外部 CSS</b>(<code>file://</code> 友好)</td></tr>
+    <tr><td class="k"><b>Design token</b></td><td><code>:root{ --honey/--ink/--bg … }</code> 一处定义配色,全文件用变量;换项目只改 token</td></tr>
+    <tr><td class="k"><b>状态徽章三色</b></td><td>✅ 已完成(绿 <code>#15803d</code>)/ 🔵 部分待验(蓝 <code>#1d4ed8</code>)/ 🟡 待完成(橙 <code>#c2410c</code>)</td></tr>
+    <tr><td class="k"><b>本地 Mermaid</b></td><td>引 <code>./assets/mermaid.min.js</code>(<b>不用 CDN</b>,<code>file://</code> 也能渲染)</td></tr>
+    <tr><td class="k"><b>可配参数块</b></td><td>每个场景嵌 <code>&lt;!-- CFG-PARAMS --&gt;</code> 表:参数/初始值/配置位置/状态——给运营</td></tr>
+    <tr><td class="k"><b>铁律框</b></td><td><code>class="warn"</code>(红)放开发/测试必看的硬规则</td></tr>
+    <tr><td class="k"><b>真值来源页脚</b></td><td>每页 footer 声明数值/状态以什么为准,文档间不重复定义</td></tr>
+    <tr><td class="k"><b>返回导航</b></td><td>每页顶部 <code>← 返回文档导航</code> 链回 index</td></tr>
+    <tr><td class="k"><b>命名约定</b></td><td><code>scenario-N-flow-vM.html</code> / <code>*-design.html</code> / <code>feature-status.html</code>;旧版进 <code>_archive/</code></td></tr>
+  </tbody>
+</table>
+
+<p>通用 class 词表(全库统一):<code>.sec</code>(章节标题) <code>.intro</code>(引子框) <code>.warn</code>(铁律) <code>.note</code>(要点) <code>.cmp</code>(对比框) <code>.cfg-h/.cfgtbl</code>(可配参数) <code>.card/.lead-card</code>(导航卡) <code>.tag.{biz,fis,sys,tech}</code>(分类标) <code>.tag.st-{done,wip,todo}</code>(状态徽章)。</p>
+
+<h2 class="sec">5. 为什么是「纯 HTML 单文件」(技术选型)</h2>
+<ul>
+  <li><b>零构建</b>:不打包、不装 node、不跑 dev server,双击 <code>file://</code> 即看——业务方/老板随时打开。</li>
+  <li><b>git 友好</b>:纯文本,改动 diff 清楚。</li>
+  <li><b>AI 友好</b>:单文件,AI 能整篇读/整篇改,不用拼上下文。</li>
+  <li><b>图即文本</b>:Mermaid 把流程图变成文本,改图=改几行字,版本可追溯。</li>
+  <li><b>要对外就托管</b>:需要发布时,整个目录扔静态托管(OSS/CDN/Pages)即可,不改一行。</li>
+  <li><b>抗腐化</b>:没有依赖版本、没有构建链,放三年打开还是这样。</li>
+</ul>
+
+<h2 class="sec">6. 从 0 落地步骤(另一个项目照做)</h2>
+<ol>
+  <li><b>先写 <code>overview.html</code> 总纲</b> —— 逼自己把整个业务一页讲清(讲不清说明还没想清)。</li>
+  <li><b>切场景</b> —— 把用户旅程切成几段,每段建一个 <code>scenario-N-flow.html</code>。</li>
+  <li><b>每场景三件事</b>:① 画 Mermaid 主流程 ② 标 <code>warn</code> 铁律 ③ 列「本场景可配参数」。</li>
+  <li><b>抽设计方案页</b> —— 需要深入设计的模块单独成 <code>*-design.html</code>(模型→流程→现状vs待做)。</li>
+  <li><b>建 <code>index.html</code> 导航 hub</b> —— 按域分组卡片 + 状态徽章 + 置顶「先读这个」。</li>
+  <li><b>建 <code>feature-status.html</code></b> —— 一张表看全盘现状 vs 待做。</li>
+  <li><b>定规范</b> —— 抄第 7 节的 token/class;定「禁用词表」+「真值来源」一句话。</li>
+  <li><b>assets + _archive</b> —— 本地 Mermaid 放 <code>assets/</code>;旧版别删,进 <code>_archive/</code>。</li>
+</ol>
+
+<div class="note">顺序很重要:<b>总纲先行</b>。先有一页读懂,再铺场景,最后建导航和状态表——而不是上来就建一堆空壳。</div>
+
+<h2 class="sec">7. 可直接抄的代码片段</h2>
+
+<h3 class="sub3">7.1 Design token + 通用 class(放每个文件的 <code>&lt;style&gt;</code>)</h3>
+<pre class="code"><code>&lt;style&gt;
+  :root{ /* 换项目只改这一段配色 */
+    --brand:#f9c74f; --brand-dark:#e07c00; --ink:#1a1410; --ink-soft:#4a3f33;
+    --ink-faint:#8b7355; --bg:#faf7f0; --paper:#fff; --border:#e8d9b8;
+    --ok:#15803d; --wip:#1d4ed8; --todo:#c2410c; }
+  *{box-sizing:border-box;}
+  body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.7;margin:0;padding:28px 16px 70px;}
+  .container{max-width:1080px;margin:0 auto;}
+  a.back{display:inline-block;margin-bottom:6px;color:var(--brand-dark);font-weight:700;font-size:13px;text-decoration:none;}
+  h2.sec{font-size:19px;border-left:5px solid var(--brand);padding-left:12px;margin:34px 0 14px;}
+  .intro{background:linear-gradient(135deg,#fef3c7,#fff7e0);border:1px solid var(--brand);
+    border-radius:14px;padding:16px 24px;margin:0 0 22px;line-height:1.85;}
+  .note{background:#fef3c7;border-radius:10px;padding:14px 18px;font-size:13px;color:var(--ink-soft);margin-top:14px;line-height:1.85;}
+  .warn{background:#fff5f5;border:2px solid #dc2626;border-radius:10px;padding:13px 18px;font-size:13px;color:var(--ink-soft);margin-top:14px;line-height:1.8;}
+  .warn b{color:#dc2626;}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:8px;}
+  th,td{border:1px solid var(--border);padding:8px 11px;text-align:left;vertical-align:top;}
+  th{background:#fef3c7;font-weight:700;}
+  /* 状态徽章三色 */
+  .st{display:inline-block;font-size:12px;padding:1px 9px;border-radius:999px;font-weight:700;white-space:nowrap;}
+  .st.done{background:#f0fdf4;color:var(--ok);} .st.wip{background:#eff6ff;color:var(--wip);} .st.todo{background:#fff7ed;color:var(--todo);}
+  footer{text-align:center;margin-top:40px;color:var(--ink-faint);font-size:12px;}
+&lt;/style&gt;</code></pre>
+
+<h3 class="sub3">7.2 本地 Mermaid(放每个有流程图的文件)</h3>
+<pre class="code"><code>&lt;!-- head 里 --&gt;
+&lt;script src="./assets/mermaid.min.js"&gt;&lt;/script&gt;
+&lt;!-- body 里画图 --&gt;
+&lt;pre class="mermaid"&gt;
+flowchart TD
+  A([开始]) --&gt; B{判断?}
+  B --&gt;|是| C[做事]
+  B --&gt;|否| D([结束])
+&lt;/pre&gt;
+&lt;!-- body 末尾初始化 --&gt;
+&lt;script&gt;mermaid.initialize({ startOnLoad:true, theme:'base',
+  themeVariables:{ primaryColor:'#fef3c7', primaryBorderColor:'#e07c00', lineColor:'#c79a3a',
+    fontFamily:"-apple-system,'PingFang SC',sans-serif", fontSize:'13px' } });&lt;/script&gt;</code></pre>
+<div class="note"><code>mermaid.min.js</code> 从 mermaid 官方下一份放 <code>assets/</code>,这样 <code>file://</code> 离线也能渲染。</div>
+
+<h3 class="sub3">7.3 「本场景可配参数」块(每个场景底部)</h3>
+<pre class="code"><code>&lt;!-- CFG-PARAMS:START --&gt;
+&lt;h3 class="sec" style="color:var(--brand-dark)"&gt;⚙️ 本场景可配参数&lt;/h3&gt;
+&lt;p style="color:var(--ink-faint);font-size:13px"&gt;运营后台可调 · 初始值 · 配置位置 · 状态（数值以线上/后台配置为准）&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;&lt;tr&gt;&lt;th&gt;参数&lt;/th&gt;&lt;th&gt;初始值&lt;/th&gt;&lt;th&gt;配置位置&lt;/th&gt;&lt;th&gt;说明&lt;/th&gt;&lt;th&gt;状态&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;示例：手续费&lt;/td&gt;&lt;td&gt;Rp 0&lt;/td&gt;&lt;td&gt;&lt;code&gt;seahub.withdraw.fee-fixed&lt;/code&gt;&lt;/td&gt;&lt;td&gt;服务端算,前端只展示&lt;/td&gt;&lt;td&gt;&lt;span class="st done"&gt;✅ 可配&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;!-- CFG-PARAMS:END --&gt;</code></pre>
+
+<h3 class="sub3">7.4 导航 hub 卡片(index.html)</h3>
+<pre class="code"><code>&lt;!-- 置顶大卡:先读这个 --&gt;
+&lt;a class="lead-card" href="./overview.html"&gt;
+  &lt;div class="t"&gt;📖 业务总纲 · 一页读懂&lt;/div&gt;
+  &lt;div class="d"&gt;整个生意怎么转。第一次看先读这个。&lt;/div&gt;
+&lt;/a&gt;
+&lt;!-- 普通卡 + 状态徽章 --&gt;
+&lt;div class="grid"&gt;
+  &lt;a class="card" href="./scenario-1-flow.html"&gt;
+    &lt;div class="t"&gt;场景一 · XXX&lt;/div&gt;
+    &lt;div class="d"&gt;一句话说明。&lt;/div&gt;
+    &lt;span class="tag st-done"&gt;✅ 已完成&lt;/span&gt;
+  &lt;/a&gt;
+&lt;/div&gt;</code></pre>
+
+<h3 class="sub3">7.5 术语 hover 释义（bx-var glossary）</h3>
+
+<p>给任何设计稿 HTML 加「鼠标悬停术语弹窗」只需三件事：<b>① CSS</b>、<b>② 占位 <code>&lt;div&gt;</code></b>、<b>③ JS + <code>G</code> 对象</b>（术语→释义）。JS 在页面加载时自动扫描全文包裹<b>首次出现</b>的每个术语，无需逐行手标。</p>
+
+<p><b>CSS（加在 <code>&lt;style&gt;</code> 里，<code>--brand-dark</code> 换成文档的对应 token）</b></p>
+<pre class="code"><code>.bx-var{border-bottom:1px dashed var(--brand-dark,#e07c00);cursor:help;font-weight:600;}
+.bx-tip{position:fixed;background:#1a1410;color:#fff;padding:11px 14px;border-radius:8px;
+  font-size:12.5px;line-height:1.6;white-space:pre-line;max-width:360px;min-width:200px;
+  z-index:10000;box-shadow:0 8px 24px rgba(0,0,0,.28),0 2px 6px rgba(0,0,0,.12);
+  pointer-events:none;opacity:0;transform:translateY(4px);
+  transition:opacity .13s ease-out,transform .13s ease-out;text-align:left;}
+.bx-tip.on{opacity:1;transform:translateY(0);}
+.bx-tip strong{color:var(--brand,#f9c74f);font-weight:700;}</code></pre>
+
+<p><b>HTML + JS（加在 <code>&lt;/body&gt;</code> 之前，按文档替换 <code>G</code> 对象词条）</b></p>
+<pre class="code"><code>&lt;div class="bx-tip" id="bx-tip"&gt;&lt;/div&gt;
+&lt;script&gt;
+(function(){
+  /* ① 术语→释义：第一行 = &lt;strong&gt; 标题，后续行 = 正文（\n 换行） */
+  var G={
+    'T1':'用户等级 T1 · 普通用户（User）',
+    'T2':'用户等级 T2 · 小团长（Agent）',
+    'T3':'用户等级 T3 · 大团长（Partner）',
+    'bps':'bps · basis points\n1 bps = 0.01%，例：500 bps = 5%',
+    // ← 在这里添加业务词……
+  };
+  var tip=document.getElementById('bx-tip');
+  /* ② TreeWalker 自动包裹首次出现的术语（跳过 code/pre/script/mermaid） */
+  var SKIP={SCRIPT:1,STYLE:1,CODE:1,PRE:1,A:1,FOOTER:1,H1:1,H2:1,H3:1};
+  var used={},w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,false),q=[],nn;
+  while(nn=w.nextNode())q.push(nn);
+  q.forEach(function(tn){
+    var p=tn.parentNode;if(!p)return;
+    for(var cur=p;cur&amp;&amp;cur!==document.body;cur=cur.parentNode)
+      if(SKIP[cur.tagName]||(cur.className&amp;&amp;/(mermaid|bx-var|bx-tip)/.test(cur.className)))return;
+    var txt=tn.nodeValue;
+    for(var k in G){if(used[k])continue;
+      var i=txt.indexOf(k);if(i&lt;0)continue;
+      used[k]=1;var after=tn.splitText(i);after.splitText(k.length);
+      var sp=document.createElement('span');
+      sp.className='bx-var';sp.setAttribute('data-term',k);sp.textContent=k;
+      after.parentNode.replaceChild(sp,after);break;}
+  });
+  /* ③ 鼠标 / 触摸事件 */
+  function pos(el,t){var d=G[t];if(!d)return;
+    var p=d.split('\n');
+    tip.innerHTML='&lt;strong&gt;'+p[0]+'&lt;/strong&gt;'+(p.length&gt;1?'\n'+p.slice(1).join('\n'):'');
+    tip.classList.add('on');
+    var r=el.getBoundingClientRect(),tw=tip.offsetWidth||280,th=tip.offsetHeight||80;
+    tip.style.left=Math.max(8,Math.min(r.left,window.innerWidth-tw-10))+'px';
+    tip.style.top=((window.innerHeight-r.bottom&gt;=th+20)?r.bottom+8:r.top-th-8)+'px';}
+  document.addEventListener('mouseover',function(e){var el=e.target;for(;el&amp;&amp;el!==document.body;el=el.parentNode)if(el.className==='bx-var'){pos(el,el.getAttribute('data-term'));return;}});
+  document.addEventListener('mouseout',function(e){var el=e.target;for(;el&amp;&amp;el!==document.body;el=el.parentNode)if(el.className==='bx-var'){tip.classList.remove('on');return;}});
+  document.addEventListener('touchstart',function(e){var el=e.target;for(;el&amp;&amp;el!==document.body;el=el.parentNode)if(el.className==='bx-var'){pos(el,el.getAttribute('data-term'));return;}},{passive:true});
+})();
+&lt;/script&gt;</code></pre>
+
+<div class="note"><b>心法</b>：<code>G</code> 对象是单一真值来源——术语定义只维护一处，JS 自动扫全文包裹首次出现。换文档只改 <code>G</code> 里的词条；CSS 变量 <code>--brand-dark</code> 换成文档对应 token（如 <code>--honey-dark</code>、<code>--gold</code>）即可。</div>
+
+<h2 class="sec">8. 一页速查(给另一个项目的人/AI)</h2>
+<div class="note">想复刻这套?照这个清单走:
+<ol>
+  <li>抄 §7.1 的 token+class、§7.2 的 Mermaid →（换配色)</li>
+  <li>先写 <code>overview.html</code> 一页读懂</li>
+  <li>切场景 → 每个 <code>scenario-N.html</code>:Mermaid + warn 铁律 + 可配参数表</li>
+  <li>深入模块写 <code>*-design.html</code>(模型→流程→现状vs待做)</li>
+  <li>建 <code>index.html</code> 导航(分组卡 + 状态徽章 + 置顶总纲)</li>
+  <li>建 <code>feature-status.html</code> 全盘表</li>
+  <li>定「禁用词表」+「真值来源一句话」,每页 footer 声明</li>
+  <li>本地 Mermaid 进 <code>assets/</code>,旧版进 <code>_archive/</code>,API/集成补充用 <code>.md</code></li>
+</ol></div>
+
+<div class="note"><b>心法</b>:无黑话 · 一页读懂先行 · 单一真值来源 · 现状对照(三色徽章)· 零构建单文件 · 图即文本。</div>
+
+<footer>AI 工作方式 · 文档体系方法论</footer>
+</div></body></html>

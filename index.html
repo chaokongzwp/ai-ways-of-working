@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 工作方式</title>
+<style>
+  :root{
+    --brand:#f9c74f; --brand-dark:#e07c00; --brand-soft:#fef3c7;
+    --ink:#1a1410; --ink-soft:#4a3f33; --ink-faint:#8b7355;
+    --bg:#faf7f0; --paper:#fff; --border:#e8d9b8;
+    --ok:#15803d; --wip:#1d4ed8; --todo:#c2410c; }
+  *{box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;margin:0;padding:28px 16px 70px;}
+  .container{max-width:1040px;margin:0 auto;}
+  header{text-align:center;margin-bottom:14px;}
+  header h1{font-size:26px;color:var(--brand-dark);margin:0 0 6px;}
+  header .sub{color:var(--ink-faint);font-size:14px;}
+  h2.sec{font-size:18px;border-left:5px solid var(--brand);padding-left:12px;margin:30px 0 12px;}
+  .intro{background:linear-gradient(135deg,var(--brand-soft),#fff7e0);border:1px solid var(--brand);border-radius:14px;padding:14px 22px;margin:0 0 20px;line-height:1.85;font-size:14px;}
+  .intro b{color:var(--brand-dark);}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:12px;}
+  .lead-card{display:block;background:linear-gradient(135deg,var(--brand),var(--brand-dark));color:#fff;border-radius:16px;padding:20px 24px;text-decoration:none;margin:10px 0 6px;}
+  .lead-card .t{font-size:19px;font-weight:800;margin-bottom:4px;}
+  .lead-card .d{font-size:13.5px;opacity:.92;}
+  .card{display:block;background:var(--paper);border:1px solid var(--border);border-radius:12px;padding:15px 18px;text-decoration:none;color:var(--ink);transition:box-shadow .15s,transform .15s;}
+  .card:hover{box-shadow:0 6px 20px rgba(224,124,0,.12);transform:translateY(-2px);}
+  .card .t{font-size:15px;font-weight:700;color:var(--brand-dark);margin-bottom:5px;}
+  .card .d{font-size:12.5px;color:var(--ink-soft);line-height:1.6;}
+  .st{display:inline-block;font-size:11.5px;padding:1px 9px;border-radius:999px;font-weight:700;margin-top:8px;background:#f0fdf4;color:var(--ok);}
+  .note{background:var(--brand-soft);border-radius:10px;padding:14px 18px;font-size:13px;color:var(--ink-soft);margin-top:14px;line-height:1.9;}
+  .note b{color:var(--ink);}
+  .note code,.intro code{background:#fff;border:1px solid var(--border);padding:1px 6px;border-radius:5px;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#6d28d9;}
+  ol.steps{margin:6px 0 0;padding-left:22px;font-size:13.5px;line-height:1.95;}
+  ol.steps li{margin:2px 0;}
+  footer{text-align:center;margin-top:40px;color:var(--ink-faint);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>🐝 AI 工作方式</h1>
+  <div class="sub">用 AI 驱动项目 + 用 HTML 文件当 PRD —— 一套可复制的工作方式</div>
+</header>
+
+<div class="intro">
+  📌 这是一套「<b>人想清楚 · AI 做出来 · 文档是唯一通信介质</b>」的工作方式脚手架。
+  <b>你现在看的这一页，本身就是用这套方法论做出来的</b> —— 纯静态单文件 HTML、一页读懂、卡片导航、零构建。
+  把整个目录 copy 到新项目，改配色 token 和业务词，就能开始。
+</div>
+
+<a class="lead-card" href="./guide/why-ai-native.html">
+  <div class="t">🤔 第一次来？先读「为什么要定这套规范」</div>
+  <div class="d">用 AI 做项目的方法论手册 —— 为什么文档代替会议、AI 执行人判断、异步优先。先懂为什么，再看下面怎么做。</div>
+</a>
+
+<h2 class="sec">📖 方法论（给人读 · 已做成 HTML，点开即看）</h2>
+<div class="grid">
+  <a class="card" href="./guide/methodology.html">
+    <div class="t">🧭 项目执行方法论</div>
+    <div class="d">人想清楚·AI做出来·文档是唯一通信介质；工作循环、人/AI 分工、新团队 3 步起步、常见的坑。</div>
+  </a>
+  <a class="card" href="./guide/doc-playbook.html">
+    <div class="t">📐 文档体系方法论</div>
+    <div class="d">用 HTML 单文件当 PRD：7 条原则·6 层结构·每类文档模板骨架·统一 token/class·可直接抄的代码片段。</div>
+  </a>
+  <a class="card" href="./guide/deploy.html">
+    <div class="t">🚀 上线 + 访问门禁</div>
+    <div class="d">OSS/CDN 部署·飞书登录门禁·文档变更通知，含本会话实战踩过的 5 个坑。</div>
+  </a>
+</div>
+
+<h2 class="sec">📄 文档模板（copy 改即用）</h2>
+<div class="grid">
+  <a class="card" href="./docs/index.html">
+    <div class="t">🗂️ docs/ 空白模板</div>
+    <div class="d">导航 hub / 业务总纲 / 场景流程 / 设计方案 / 全盘状态表，5 个空白模板。点开看样式，copy 后把 〔占位〕 换成你的内容。</div>
+    <span class="st">5 个模板就绪</span>
+  </a>
+</div>
+
+<h2 class="sec">🤖 给 AI 的指令（让团队的 AI 自动按方法论干活）</h2>
+<div class="note">
+  仓库里有两个 <b>AI 指令文件</b>，对方 clone 后 AI 自动读、无需配置：<br>
+  · <b>Codex / 通用约定</b> 读 <code>AGENTS.md</code>（核心指令：角色、工作循环、写文档规则、铁律）<br>
+  · <b>Claude Code</b> 读 <code>CLAUDE.md</code>（速记 + 转发到 AGENTS.md）<br><br>
+  <b>怎么开始</b>：把整套规范 当新项目起点，对方第一句直接说 —— <b>“按 AGENTS.md 的方法论，帮我写 overview 总纲”</b>，AI 就会照模板和规则开干。<br>
+  换 Cursor / Copilot / Windsurf？加一行转发文件指向 <code>AGENTS.md</code> 即可（见 <code>README.md</code>）。
+</div>
+
+<h2 class="sec">⚡ 5 分钟上手</h2>
+<div class="note">
+  <ol class="steps">
+    <li>Copy 整个目录到新项目（或单独建 doc 仓库）。</li>
+    <li>全局搜 <code>--brand</code>，把配色 token 换成你的品牌色。</li>
+    <li>写 <code>docs/overview.html</code> 业务总纲（回答 5 个问题）—— <b>写不清＝还没想清</b>。</li>
+    <li>Copy 场景 / 设计模板，每篇画 Mermaid + 写铁律 + 列可配参数。</li>
+    <li>更新 <code>docs/index.html</code> 导航卡 + <code>docs/feature-status.html</code> 状态表。</li>
+    <li>双击 <code>docs/index.html</code> 看效果（<code>file://</code> 直接可看，无需起服务）。</li>
+  </ol>
+  <b>顺序很重要：总纲先行。</b> 别上来建一堆空壳。
+</div>
+
+<footer>AI 工作方式 · 本页用本方法论制作 · 方法论详见 guide/ 三篇 · 给 AI 的指令见 AGENTS.md / CLAUDE.md</footer>
+</div>
+</body>
+</html>

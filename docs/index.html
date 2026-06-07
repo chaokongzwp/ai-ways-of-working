@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>〔项目名〕· 文档导航</title>
+<!-- 启用飞书门禁：取消下一行注释，并配好 ./assets/auth-guard.js 里的后端地址（见 DEPLOY.md 二）-->
+<!-- <script src="./assets/auth-guard.js"></script> -->
+<style>
+  :root{ /* ← 换项目只改这一段配色 token */
+    --brand:#f9c74f; --brand-dark:#e07c00; --brand-soft:#fef3c7;
+    --ink:#1a1410; --ink-soft:#4a3f33; --ink-faint:#8b7355;
+    --bg:#faf7f0; --paper:#fff; --border:#e8d9b8;
+    --ok:#15803d; --wip:#1d4ed8; --todo:#c2410c; }
+  *{box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;margin:0;padding:28px 16px 70px;}
+  .container{max-width:1080px;margin:0 auto;}
+  header{text-align:center;margin-bottom:14px;}
+  header h1{font-size:25px;color:var(--brand-dark);margin:0 0 6px;}
+  header .sub{color:var(--ink-faint);font-size:14px;}
+  h2.sec{font-size:18px;border-left:5px solid var(--brand);padding-left:12px;margin:30px 0 12px;}
+  .intro{background:linear-gradient(135deg,var(--brand-soft),#fff7e0);border:1px solid var(--brand);border-radius:14px;padding:14px 22px;margin:0 0 20px;line-height:1.85;font-size:14px;}
+  .intro b{color:var(--brand-dark);}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:12px;}
+  .lead-card{display:block;background:linear-gradient(135deg,var(--brand),var(--brand-dark));color:#fff;border-radius:16px;padding:20px 24px;text-decoration:none;margin:10px 0 6px;}
+  .lead-card .t{font-size:19px;font-weight:800;margin-bottom:4px;}
+  .lead-card .d{font-size:13.5px;opacity:.92;}
+  .card{display:block;background:var(--paper);border:1px solid var(--border);border-radius:12px;padding:15px 18px;text-decoration:none;color:var(--ink);transition:box-shadow .15s,transform .15s;}
+  .card:hover{box-shadow:0 6px 20px rgba(224,124,0,.12);transform:translateY(-2px);}
+  .card .t{font-size:15px;font-weight:700;color:var(--brand-dark);margin-bottom:5px;}
+  .card .d{font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:8px;}
+  .st{display:inline-block;font-size:11.5px;padding:1px 9px;border-radius:999px;font-weight:700;white-space:nowrap;}
+  .st.done{background:#f0fdf4;color:var(--ok);} .st.wip{background:#eff6ff;color:var(--wip);} .st.todo{background:#fff7ed;color:var(--todo);}
+  footer{text-align:center;margin-top:40px;color:var(--ink-faint);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>📚 〔项目名〕· 文档导航</h1>
+  <div class="sub">唯一入口 · 所有文档从这里点进去</div>
+</header>
+
+<div class="intro">
+  📌 本库原则：<b>不用任何黑话</b> · <b>一页读懂先行</b> · <b>单一真值来源</b> · 现状用三色徽章标注。
+  数值 / 状态一律以 〔线上 / 某权威设计稿〕为准，文档之间互相指向、不重复定义。
+</div>
+
+<!-- 置顶大卡：先读这个 -->
+<a class="lead-card" href="./overview.html">
+  <div class="t">📖 业务总纲 · 一页读懂</div>
+  <div class="d">整个〔项目〕怎么转。第一次看先读这个。</div>
+</a>
+
+<!-- 分组①：核心场景（复制 card 改 href/标题/说明/徽章）-->
+<h2 class="sec">🟢 核心场景</h2>
+<div class="grid">
+  <a class="card" href="./scenario-1-flow.html">
+    <div class="t">场景一 · 〔名称〕</div>
+    <div class="d">〔一句话说明这个场景〕。</div>
+    <span class="st done">✅ 已完成</span>
+  </a>
+  <a class="card" href="./scenario-2-flow.html">
+    <div class="t">场景二 · 〔名称〕</div>
+    <div class="d">〔一句话说明〕。</div>
+    <span class="st wip">🔵 部分待验</span>
+  </a>
+</div>
+
+<!-- 分组②：设计方案 -->
+<h2 class="sec">📐 设计方案</h2>
+<div class="grid">
+  <a class="card" href="./xxx-design.html">
+    <div class="t">〔模块〕· 设计</div>
+    <div class="d">模型 → 流程 → 现状 vs 待做。</div>
+    <span class="st wip">🔵 评审中</span>
+  </a>
+</div>
+
+<!-- 分组③：平台 / 状态 -->
+<h2 class="sec">📊 平台 / 状态</h2>
+<div class="grid">
+  <a class="card" href="./feature-status.html">
+    <div class="t">📊 全盘状态表</div>
+    <div class="d">一张表看所有功能做到哪了。</div>
+    <span class="st done">✅ 实时</span>
+  </a>
+</div>
+
+<footer>〔项目名〕文档库 · 数值 / 状态以〔线上 / 设计稿〕为准</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>项目执行方法论 · AI 原生工作方式</title>
+<!-- 启用飞书门禁：取消下一行注释（见 deploy.html）-->
+<!-- <script src="../docs/assets/auth-guard.js"></script> -->
+<style>
+  :root{ /* ← 换项目只改这一段 */
+    --brand:#f9c74f; --brand-dark:#e07c00; --brand-soft:#fef3c7;
+    --ink:#1a1410; --ink-soft:#4a3f33; --ink-faint:#8b7355;
+    --bg:#faf7f0; --paper:#fff; --border:#e8d9b8; --ok:#15803d; --wip:#1d4ed8; --todo:#c2410c; }
+  *{box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;margin:0;padding:28px 16px 70px;}
+  .container{max-width:1080px;margin:0 auto;}
+  a.back{display:inline-block;margin-bottom:6px;color:var(--brand-dark);font-weight:700;font-size:13px;text-decoration:none;}
+  header{text-align:center;margin-bottom:12px;}
+  header h1{font-size:23px;color:var(--brand-dark);margin:0 0 6px;}
+  header .sub{color:var(--ink-faint);font-size:14px;}
+  h2.sec{font-size:18px;border-left:5px solid var(--brand);padding-left:12px;margin:30px 0 12px;}
+  h3.sub3{font-size:15px;color:var(--brand-dark);margin:20px 0 8px;}
+  .intro{background:linear-gradient(135deg,var(--brand-soft),#fff7e0);border:1px solid var(--brand);border-radius:14px;padding:14px 22px;margin:0 0 20px;line-height:1.85;font-size:14px;}
+  .intro b{color:var(--brand-dark);}
+  .flowwrap{background:var(--paper);border:1px solid var(--border);border-radius:12px;padding:14px 8px;overflow-x:auto;}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin:12px 0 0;font-size:12.5px;color:var(--ink-soft);}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .dot{width:12px;height:12px;border-radius:3px;display:inline-block;border:1px solid;}
+  .warn{background:#fff5f5;border:2px solid #dc2626;border-radius:10px;padding:13px 18px;font-size:13px;color:var(--ink-soft);margin-top:14px;line-height:1.8;}
+  .warn b{color:#dc2626;}
+  .note{background:var(--brand-soft);border-radius:10px;padding:14px 18px;font-size:13px;color:var(--ink-soft);margin-top:14px;line-height:1.85;}
+  .note b{color:var(--ink);}
+  code{background:#f1f5f9;padding:1px 6px;border-radius:5px;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#6d28d9;}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:8px;}
+  th,td{border:1px solid var(--border);padding:9px 12px;text-align:left;vertical-align:top;line-height:1.6;}
+  th{background:var(--brand-soft);font-weight:700;}
+  .st{display:inline-block;font-size:12px;padding:1px 9px;border-radius:999px;font-weight:700;}
+  .st.done{background:#f0fdf4;color:var(--ok);} .st.wip{background:#eff6ff;color:var(--wip);} .st.todo{background:#fff7ed;color:var(--todo);}
+  footer{text-align:center;margin-top:38px;color:var(--ink-faint);font-size:12px;}
+  pre.code{background:#1a1410;color:#f0e6d2;border-radius:10px;padding:14px 16px;overflow-x:auto;font-family:ui-monospace,Menlo,monospace;font-size:12px;line-height:1.6;margin-top:10px;white-space:pre;}
+  pre.code code{background:none;color:inherit;padding:0;font-size:12px;}
+  ul,ol{font-size:14px;line-height:1.8;} li{margin:3px 0;}
+</style>
+</head>
+<body>
+<div class="container">
+<a class="back" href="../index.html">← 返回首页</a>
+<header>
+  <h1>🧭 项目执行方法论</h1>
+  <div class="sub">AI 原生工作方式 · 人想清楚 · AI 做出来 · 文档是唯一通信介质</div>
+</header>
+
+<div class="intro"><b>一句话</b>：人负责「想清楚」，AI 负责「做出来」，<b>文档是唯一的通信介质</b>。<br><br>这份讲「一个项目怎么用 AI 驱动着跑起来」。配套的「文档怎么组织」见 <code>DOC-PLAYBOOK.md</code>，「文档站怎么上线 + 加门禁」见 <code>DEPLOY.md</code>。</div>
+
+<h2 class="sec">0. 在解决什么老问题</h2>
+<table>
+  <thead><tr><th>老问题</th><th>根因</th><th>这套方法怎么破</th></tr></thead>
+  <tbody>
+    <tr><td class="k">需求讲了三遍，做出来还是偏</td><td>靠口头/会议传递，每传一手丢一层</td><td>想要什么<b>写成文档</b>，文档是唯一事实源</td></tr>
+    <tr><td class="k">会开完，没人知道结论</td><td>口头结论不可追溯</td><td>不开会同步，<b>结论即文档</b>，可回看</td></tr>
+    <tr><td class="k">一个人离职，知识就带走</td><td>知识在脑子里，不在文档里</td><td>每次产出都<b>落进文档</b>，知识沉淀在库里</td></tr>
+  </tbody>
+</table>
+
+<h2 class="sec">1. 三条原则</h2>
+<table>
+  <thead><tr><th>原则</th><th>含义</th></tr></thead>
+  <tbody>
+    <tr><td class="k"><b>① 文档代替会议</b></td><td>想清楚就写成文档，不靠开会同步。文档可追溯、可异步、可被 AI 直接读。</td></tr>
+    <tr><td class="k"><b>② AI 来执行</b></td><td>人写清楚「想要什么」，AI 出方案 + 写码 + 部署 + 自测。人不写样板代码。</td></tr>
+    <tr><td class="k"><b>③ 异步优先</b></td><td>发文档链接代替拉会，每人按自己节奏看。需要决策时才同步。</td></tr>
+  </tbody>
+</table>
+
+<h2 class="sec">2. 核心循环：一个功能从 0 到上线</h2>
+<pre class="code"><code>①人 写清楚「想要什么」
+      ↓
+②AI 出方案（2-3 个 + 权衡）  →  人 选方向 / 判断
+      ↓
+③AI 执行（写码 · 改配置 · 部署 · 自测）
+      ↓
+④人 验收（看结果对不对，AI 给验证证据）
+      ↓
+⑤人+AI 把结果落进文档（现状/设计/状态表更新）
+      ↓
+⑥人 发链接，团队自己来看</code></pre>
+
+<div class="note">这套方法本身就是范例：你提需求 → AI 给方案 → 你拍板 → AI 执行+部署+验证 → 落进文档 → 发链接。<b>人始终在「定义」和「判断」两端，中间的执行交给 AI。</b></div>
+
+<h2 class="sec">3. 角色分工（人 vs AI）</h2>
+<table>
+  <thead><tr><th>阶段</th><th>人做</th><th>AI 做</th></tr></thead>
+  <tbody>
+    <tr><td class="k">想清楚</td><td>✅ <b>定义要什么、判断对错</b>（不可外包）</td><td>追问、补盲点、列边界</td></tr>
+    <tr><td class="k">出方案</td><td>选方向、定优先级</td><td>给多个方案 + 权衡取舍</td></tr>
+    <tr><td class="k">执行</td><td>不碰细节</td><td>写码 / 改配置 / 部署 / 迁移</td></tr>
+    <tr><td class="k">验收</td><td>✅ <b>看结果对不对</b></td><td>自测 + 给可复现的验证证据</td></tr>
+    <tr><td class="k">落文档</td><td>审一眼</td><td>写 / 更新文档、状态徽章</td></tr>
+  </tbody>
+</table>
+
+<p><b>心法</b>：人只做两件机器做不了的事——<b>想清楚</b>（定义价值）和<b>判断</b>（验收对错）。其余交给 AI。</p>
+
+<h2 class="sec">4. 一个项目需要哪些文档（最小集）</h2>
+<table>
+  <thead><tr><th>文档</th><th>作用</th><th>模板</th></tr></thead>
+  <tbody>
+    <tr><td class="k"><b>业务总纲</b></td><td>一页读懂整个项目怎么转（必读、第一篇）</td><td><code>docs/overview.html</code></td></tr>
+    <tr><td class="k"><b>场景流程</b></td><td>用户旅程切片，每片一篇（Mermaid 流程图）</td><td><code>docs/scenario-template.html</code></td></tr>
+    <tr><td class="k"><b>设计方案</b></td><td>需要深入设计的模块（模型→流程→现状vs待做）</td><td><code>docs/design-template.html</code></td></tr>
+    <tr><td class="k"><b>全盘状态表</b></td><td>一张表看所有功能做到哪了</td><td><code>docs/feature-status.html</code></td></tr>
+    <tr><td class="k"><b>导航 hub</b></td><td>唯一入口，所有文档从这里点进去</td><td><code>docs/index.html</code></td></tr>
+  </tbody>
+</table>
+
+<div class="note">详细的组织规则、模板骨架、配色/状态徽章规范 → <code>DOC-PLAYBOOK.md</code>。</div>
+
+<h2 class="sec">5. 新项目 / 新团队怎么开始（3 步）</h2>
+<ol>
+  <li><b>想清楚，写出来</b> —— 先写 <code>overview.html</code> 业务总纲。<b>写不清就是还没想清</b>，这一步逼你把账算明白。</li>
+  <li><b>跑通第一个流程</b> —— 选一个真实功能，完整走一遍核心循环（人定义 → AI 做 → 验收 → 落文档 → 发链接）。</li>
+  <li><b>变成习惯</b> —— 之后每个需求都走这个循环，文档库会自然长出来，而不是事后补。</li>
+</ol>
+
+<div class="note"><b>顺序很重要：总纲先行。</b> 先有一页读懂，再铺场景，最后建导航和状态表——别上来就建一堆空壳。</div>
+
+<h2 class="sec">6. 常见的坑</h2>
+<ul>
+  <li>❌ <b>上来建一堆空文档</b> → 总纲先行，文档跟着真实功能长。</li>
+  <li>❌ <b>文档和代码不同步</b> → 落文档是核心循环的第 ⑤ 步，不是事后补作业。</li>
+  <li>❌ <b>把 AI 当搜索引擎</b> → 给它完整上下文 + 把判断权留给人；AI 出方案，人拍板。</li>
+  <li>❌ <b>口头补充需求</b> → 任何改动都回到文档，否则又回到「讲三遍还是偏」。</li>
+</ul>
+
+<div class="note"><b>心法总结</b>：人想清楚 · AI 做出来 · 文档是唯一通信介质 · 现状对照(三色徽章) · 总纲先行。</div>
+
+<footer>AI 工作方式 · 项目执行方法论</footer>
+</div>
+</body>
+</html>

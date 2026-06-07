@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>〔项目〕· 业务总纲（一页读懂）</title>
+<!-- 启用飞书门禁：取消下一行注释（见 DEPLOY.md 二）-->
+<!-- <script src="./assets/auth-guard.js"></script> -->
+<style>
+  :root{ /* ← 换项目只改这一段 */
+    --brand:#f9c74f; --brand-dark:#e07c00; --brand-soft:#fef3c7;
+    --ink:#1a1410; --ink-soft:#4a3f33; --ink-faint:#8b7355;
+    --bg:#faf7f0; --paper:#fff; --border:#e8d9b8; --ok:#15803d; --wip:#1d4ed8; --todo:#c2410c; }
+  *{box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--ink);line-height:1.75;margin:0;padding:28px 16px 70px;}
+  .container{max-width:980px;margin:0 auto;}
+  a.back{display:inline-block;margin-bottom:6px;color:var(--brand-dark);font-weight:700;font-size:13px;text-decoration:none;}
+  header{text-align:center;margin-bottom:12px;}
+  header h1{font-size:25px;color:var(--brand-dark);margin:0 0 6px;}
+  header .sub{color:var(--ink-faint);font-size:14px;}
+  h2.sec{font-size:18px;border-left:5px solid var(--brand);padding-left:12px;margin:30px 0 12px;}
+  .intro{background:linear-gradient(135deg,var(--brand-soft),#fff7e0);border:1px solid var(--brand);border-radius:14px;padding:14px 22px;margin:0 0 20px;line-height:1.85;font-size:14px;}
+  .intro b{color:var(--brand-dark);}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:8px;}
+  th,td{border:1px solid var(--border);padding:9px 12px;text-align:left;vertical-align:top;line-height:1.6;}
+  th{background:var(--brand-soft);font-weight:700;}
+  td.k{font-weight:700;white-space:nowrap;}
+  .note{background:var(--brand-soft);border-radius:10px;padding:14px 18px;font-size:13px;color:var(--ink-soft);margin-top:14px;line-height:1.85;}
+  .note b{color:var(--ink);}
+  .next a{color:var(--brand-dark);font-weight:600;text-decoration:none;}
+  footer{text-align:center;margin-top:38px;color:var(--ink-faint);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="container">
+<a class="back" href="./index.html">← 返回文档导航</a>
+<header>
+  <h1>📖 〔项目〕· 业务总纲</h1>
+  <div class="sub">一页读懂整个〔项目/生意〕怎么转 —— 第一次看先读这个</div>
+</header>
+
+<div class="intro">
+  〔两三句话讲清这个项目到底在做什么、为谁创造什么价值、靠什么转起来。讲不清，说明还没想清——先想清再写。〕
+</div>
+
+<!-- 业务总纲固定回答这 5 个问题 -->
+<h2 class="sec">一、有哪几种人</h2>
+<p>〔列出系统里的角色，以及谁赚得多/谁是核心。用表更清楚。〕</p>
+<table>
+  <thead><tr><th>角色</th><th>是谁</th><th>能得到什么</th></tr></thead>
+  <tbody>
+    <tr><td class="k">〔角色 A〕</td><td>〔定义〕</td><td>〔收益/价值〕</td></tr>
+    <tr><td class="k">〔角色 B〕</td><td>〔定义〕</td><td>〔收益/价值〕</td></tr>
+  </tbody>
+</table>
+
+<h2 class="sec">二、钱从哪来、怎么一层层分</h2>
+<p>〔收入来源 + 怎么分配给各角色。这是商业模式的核心，务必算清。〕</p>
+
+<h2 class="sec">三、怎么把盘子做大</h2>
+<p>〔增长机制：裂变 / 升级 / 复购 等。一句话讲清飞轮怎么转。〕</p>
+
+<h2 class="sec">四、一个人的完整旅程</h2>
+<p>〔从进来到做到顶，一个典型用户经历哪些阶段。可配一张 Mermaid 旅程图（需引 mermaid.min.js）。〕</p>
+
+<h2 class="sec">五、接下来看哪</h2>
+<div class="note next">
+  想深入某一块，点这些：<br>
+  · <a href="./scenario-1-flow.html">场景一 · 〔名称〕</a><br>
+  · <a href="./xxx-design.html">〔模块〕设计方案</a><br>
+  · <a href="./feature-status.html">全盘状态表（做到哪了）</a>
+</div>
+
+<footer>〔项目〕· 业务总纲 · 数值以〔线上 / 设计稿〕为准</footer>
+</div>
+</body>
+</html>
