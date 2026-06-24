@@ -28,7 +28,7 @@ function markdownEscape(text) {
 
 function buildCard() {
   const title = value('DOC_CHANGE_TITLE', 'BeeX Doc 仓库有更新');
-  const repo = value('DOC_CHANGE_REPO', 'seahub-x-doc');
+  const repo = value('DOC_CHANGE_REPO', 'beex-doc');
   const branch = value('DOC_CHANGE_BRANCH', 'main');
   const commit = value('DOC_CHANGE_COMMIT');
   const author = value('DOC_CHANGE_AUTHOR');
