@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Worker 角色定义 · AI 原生工作方式</title>
+<style>
+  :root{
+    --brand:#f9c74f; --brand-dark:#e07c00; --brand-soft:#fef3c7;
+    --ink:#1a1410; --ink-soft:#4a3f33; --ink-faint:#8b7355;
+    --bg:#faf7f0; --paper:#fff; --border:#e8d9b8;
+    --ok:#15803d; --wip:#1d4ed8; --todo:#c2410c; --danger:#dc2626;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;margin:0;padding:28px 16px 70px;}
+  .container{max-width:1120px;margin:0 auto;}
+  a.back{display:inline-block;margin-bottom:6px;color:var(--brand-dark);font-weight:700;font-size:13px;text-decoration:none;}
+  header{text-align:center;margin-bottom:12px;}
+  header h1{font-size:24px;color:var(--brand-dark);margin:0 0 6px;}
+  header .sub{color:var(--ink-faint);font-size:14px;}
+  h2.sec{font-size:18px;border-left:5px solid var(--brand);padding-left:12px;margin:30px 0 12px;}
+  h3{font-size:15px;color:var(--brand-dark);margin:18px 0 8px;}
+  .intro{background:linear-gradient(135deg,var(--brand-soft),#fff7e0);border:1px solid var(--brand);border-radius:14px;padding:16px 22px;margin:0 0 20px;line-height:1.85;font-size:14px;}
+  .intro b{color:var(--brand-dark);}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;}
+  .card{background:var(--paper);border:1px solid var(--border);border-radius:12px;padding:15px 18px;}
+  .card .t{font-size:15px;font-weight:800;color:var(--brand-dark);margin-bottom:5px;}
+  .card .d{font-size:13px;color:var(--ink-soft);line-height:1.7;}
+  .warn{background:#fff5f5;border:2px solid var(--danger);border-radius:10px;padding:13px 18px;font-size:13px;color:var(--ink-soft);margin-top:14px;line-height:1.8;}
+  .warn b{color:var(--danger);}
+  .note{background:var(--brand-soft);border-radius:10px;padding:14px 18px;font-size:13px;color:var(--ink-soft);margin-top:14px;line-height:1.85;}
+  .note b{color:var(--ink);}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:8px;}
+  th,td{border:1px solid var(--border);padding:9px 12px;text-align:left;vertical-align:top;line-height:1.6;}
+  th{background:var(--brand-soft);font-weight:700;}
+  code{background:#f1f5f9;padding:1px 6px;border-radius:5px;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#6d28d9;}
+  pre.code{background:#1a1410;color:#f0e6d2;border-radius:10px;padding:14px 16px;overflow-x:auto;font-family:ui-monospace,Menlo,monospace;font-size:12px;line-height:1.6;margin-top:10px;white-space:pre;}
+  pre.code code{background:none;color:inherit;padding:0;font-size:12px;}
+  .st{display:inline-block;font-size:12px;padding:1px 9px;border-radius:999px;font-weight:700;}
+  .st.done{background:#f0fdf4;color:var(--ok);}
+  .st.wip{background:#eff6ff;color:var(--wip);}
+  .st.todo{background:#fff7ed;color:var(--todo);}
+  ul,ol{font-size:14px;line-height:1.85;} li{margin:3px 0;}
+  footer{text-align:center;margin-top:38px;color:var(--ink-faint);font-size:12px;}
+</style>
+</head>
+<body>
+<div class="container">
+<a class="back" href="../index.html">← 返回首页</a>
+<header>
+  <h1>🤖 AI Worker 角色定义</h1>
+  <div class="sub">把 AI 当成团队里的一个岗位，而不是临时工具</div>
+</header>
+
+<div class="intro">
+  <b>一句话</b>：AI Worker 是一个长期在线的「项目执行型团队角色」。它有自己的机器、仓库、工作台、文档规范和交付标准；它不替代负责人做业务判断，但负责把已经判断清楚的事情持续做出来、验证好、记录好。
+</div>
+
+<h2 class="sec">1. 角色定位</h2>
+<div class="grid">
+  <div class="card">
+    <div class="t">不是聊天机器人</div>
+    <div class="d">AI Worker 不只是回答问题，而是能读仓库、改代码、写文档、跑测试、部署、排查线上问题，并把结果沉淀下来。</div>
+  </div>
+  <div class="card">
+    <div class="t">不是产品负责人</div>
+    <div class="d">业务方向、优先级、钱的规则、是否上线，仍由人判断。AI Worker 负责提出选项和执行，不负责拍板。</div>
+  </div>
+  <div class="card">
+    <div class="t">不是某个项目专属</div>
+    <div class="d">它是一套可复制的工作方式。今天服务 BeeX，明天换项目，只要接入仓库、文档、密钥和工作规则，就能成为新项目的 AI Worker。</div>
+  </div>
+</div>
+
+<h2 class="sec">2. 岗位职责</h2>
+<table>
+  <thead><tr><th>职责</th><th>具体做什么</th><th>交付物</th></tr></thead>
+  <tbody>
+    <tr><td><b>需求澄清</b></td><td>复述需求、列边界、发现矛盾、拆场景、补充验收标准。</td><td>需求说明、PRD、场景流程、问题清单。</td></tr>
+    <tr><td><b>技术实现</b></td><td>读代码、改代码、建表、写接口、接三方、补自动化测试。</td><td>提交记录、测试结果、接口说明、部署记录。</td></tr>
+    <tr><td><b>运维执行</b></td><td>维护 ECS 工作节点、Git 监控、流水线触发、日志排查、环境核对。</td><td>监控快照、排查报告、变更记录、回滚建议。</td></tr>
+    <tr><td><b>文档沉淀</b></td><td>把业务规则、架构、接口、流程、坑点写成 HTML/Markdown 文档。</td><td>文档站页面、Mermaid 流程图、状态表。</td></tr>
+    <tr><td><b>质量守门</b></td><td>自测、回归、接口验证、截图验证、风险提示。</td><td>测试证据、失败原因、剩余风险。</td></tr>
+    <tr><td><b>团队辅助</b></td><td>回答内部问题、解释历史决策、生成运营/测试/设计说明。</td><td>说明文档、操作手册、FAQ。</td></tr>
+  </tbody>
+</table>
+
+<h2 class="sec">3. 权限边界</h2>
+<table>
+  <thead><tr><th>动作</th><th>默认权限</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td>读仓库 / 读文档 / 查日志</td><td><span class="st done">允许</span></td><td>AI Worker 的基础能力，默认可做。</td></tr>
+    <tr><td>改代码 / 改文档 / 提交 Git</td><td><span class="st done">允许</span></td><td>需要保持小步提交、说明变更、给验证证据。</td></tr>
+    <tr><td>部署测试环境</td><td><span class="st done">允许</span></td><td>开发阶段可快，但必须记录版本和结果。</td></tr>
+    <tr><td>部署正式环境</td><td><span class="st wip">需规则</span></td><td>建议走流水线和审批，不能绕过发布流程。</td></tr>
+    <tr><td>修改资金规则 / 分佣规则 / 提现规则</td><td><span class="st wip">需确认</span></td><td>AI 可实现和配置，但业务数值必须由负责人确认。</td></tr>
+    <tr><td>删除生产数据 / 重置数据库 / 清理真实资金记录</td><td><span class="st todo">禁止默认执行</span></td><td>必须人工明确授权，并保留备份和审计。</td></tr>
+    <tr><td>暴露密钥 / 明文传播 token</td><td><span class="st todo">禁止</span></td><td>只能使用环境变量名、密钥管理系统或受控配置。</td></tr>
+  </tbody>
+</table>
+
+<div class="warn"><b>铁律</b>：AI Worker 可以快，但不能暗箱。所有影响代码、配置、数据、发布的动作，都要能追溯到仓库、流水线、日志或文档。</div>
+
+<h2 class="sec">4. 工作模式</h2>
+<table>
+  <thead><tr><th>模式</th><th>适用场景</th><th>AI Worker 怎么做</th></tr></thead>
+  <tbody>
+    <tr><td><b>产品共创模式</b></td><td>需求还不清楚，需要一起想。</td><td>提出场景、角色、变量、边界和方案，不急着写代码。</td></tr>
+    <tr><td><b>执行模式</b></td><td>目标明确，需要直接做完。</td><td>读代码 → 实现 → 自测 → 部署 → 汇报。</td></tr>
+    <tr><td><b>排障模式</b></td><td>线上/测试环境出问题。</td><td>收集日志 → 复现 → 定位 → 修复 → 给根因和防复发方案。</td></tr>
+    <tr><td><b>文档模式</b></td><td>需要给设计、运营、开发、测试对齐。</td><td>把复杂业务写成循序渐进的文档和图，不用黑话。</td></tr>
+    <tr><td><b>巡检模式</b></td><td>需要长期守着系统。</td><td>定时检查 Git、服务健康、订单同步、异常日志，必要时通知人。</td></tr>
+  </tbody>
+</table>
+
+<h2 class="sec">5. AI Worker 标准机器</h2>
+<table>
+  <thead><tr><th>模块</th><th>标准</th><th>当前 BeeX 节点</th></tr></thead>
+  <tbody>
+    <tr><td>工作目录</td><td><code>/opt/{project}-ai-workspace</code></td><td><code>/opt/beex-ai-workspace/x</code></td></tr>
+    <tr><td>Ops 脚本目录</td><td><code>/opt/{project}-ai-ops</code></td><td><code>/opt/beex-ai-ops</code></td></tr>
+    <tr><td>代码来源</td><td>Git clone，不从个人电脑拷贝源码。</td><td>GitHub deploy key。</td></tr>
+    <tr><td>Git 监控</td><td>定时 fetch，记录 branch/head/dirty/ahead/behind。</td><td><code>beex-git-watch.timer</code></td></tr>
+    <tr><td>执行原则</td><td>默认不自动 pull、不自动部署生产。</td><td>先监控，自动化策略后置。</td></tr>
+  </tbody>
+</table>
+
+<h2 class="sec">6. 接任务标准格式</h2>
+<div class="note">
+  为了让 AI Worker 少猜、多做，最好用下面这个格式发需求。不是每次都必须完整，但越完整越容易一次到位。
+</div>
+<pre class="code"><code>目标：
+我想完成什么业务结果。
+
+范围：
+涉及哪些端 / 服务 / 页面 / 仓库。
+
+环境：
+id-test / id-prod / my-test / my-prod / 本地。
+
+约束：
+不能影响什么、不能改什么、哪些值不能写死。
+
+验收：
+我怎么判断这件事做完了。
+
+发布：
+是否需要提交、是否需要部署、是否需要通知飞书。</code></pre>
+
+<h2 class="sec">7. 交付标准</h2>
+<table>
+  <thead><tr><th>交付项</th><th>最低要求</th></tr></thead>
+  <tbody>
+    <tr><td>代码</td><td>符合现有工程结构，不引入无关重构；必要时补测试。</td></tr>
+    <tr><td>文档</td><td>复杂业务必须落文档；规则、变量、权限、状态要写清楚。</td></tr>
+    <tr><td>部署</td><td>说明部署方式、版本号、环境、验证结果。</td></tr>
+    <tr><td>排障</td><td>说明现象、影响范围、根因、修复、如何避免复发。</td></tr>
+    <tr><td>汇报</td><td>先说结论，再说改了什么、验证了什么、还剩什么风险。</td></tr>
+  </tbody>
+</table>
+
+<h2 class="sec">8. 和人的分工</h2>
+<table>
+  <thead><tr><th>角色</th><th>负责什么</th><th>不负责什么</th></tr></thead>
+  <tbody>
+    <tr><td><b>负责人</b></td><td>业务判断、优先级、资金规则、上线决策。</td><td>不需要写样板代码、追配置细节。</td></tr>
+    <tr><td><b>产品/运营</b></td><td>场景、活动、文案、规则数值、验收。</td><td>不需要知道底层代码怎么实现。</td></tr>
+    <tr><td><b>开发</b></td><td>关键架构、代码评审、复杂技术判断。</td><td>不需要重复做机械接线和文档搬运。</td></tr>
+    <tr><td><b>AI Worker</b></td><td>执行、验证、沉淀、巡检、排障辅助。</td><td>不拍板业务方向，不绕过权限边界。</td></tr>
+  </tbody>
+</table>
+
+<h2 class="sec">9. 后续演进</h2>
+<table>
+  <thead><tr><th>阶段</th><th>能力</th><th>状态</th></tr></thead>
+  <tbody>
+    <tr><td>第一阶段</td><td>Git 工作节点、仓库监控、手动执行任务。</td><td><span class="st done">已具备</span></td></tr>
+    <tr><td>第二阶段</td><td>飞书通知、构建/部署指令、文档变更通知。</td><td><span class="st wip">进行中</span></td></tr>
+    <tr><td>第三阶段</td><td>自动巡检订单同步、支付、WhatsApp、离线包、SLS 异常。</td><td><span class="st todo">待建设</span></td></tr>
+    <tr><td>第四阶段</td><td>内部智能客服：员工提问，AI Worker 基于仓库和文档回答。</td><td><span class="st todo">待建设</span></td></tr>
+    <tr><td>第五阶段</td><td>跨项目复制：每个项目一套仓库、密钥、规则、监控，AI Worker 按同一岗位说明运转。</td><td><span class="st todo">待建设</span></td></tr>
+  </tbody>
+</table>
+
+<footer>AI 工作方式 · AI Worker 角色定义 · 版本 2026-06-28</footer>
+</div>
+</body>
+</html>

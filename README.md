@@ -17,6 +17,7 @@ index.html              ★ 主页（先打开这个）
 guide/                  方法论（HTML，给人读）
   ├── methodology.html      项目执行方法论（人想清楚·AI做出来·文档是唯一通信介质）
   ├── doc-playbook.html     文档体系方法论（7原则·6层·模板·可抄代码）
+  ├── ai-worker-role.html   AI Worker 角色定义（职责·权限·交付标准·标准机器）
   └── deploy.html           上线 + 飞书门禁 + 变更通知（含踩过的坑）
 docs/                   文档模板（copy 改即用）
   ├── index / overview / scenario-1-flow / xxx-design / feature-status .html
