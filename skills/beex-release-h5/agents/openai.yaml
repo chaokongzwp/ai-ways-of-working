@@ -1,4 +1,0 @@
-interface:
-  display_name: "Release BeeX H5"
-  short_description: "Build and publish BeeX H5 offline packages safely"
-  default_prompt: "Publish the BeeX H5 package through the guarded test-to-production workflow."

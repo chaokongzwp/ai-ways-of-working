@@ -1,4 +1,0 @@
-interface:
-  display_name: "Release BeeX Web"
-  short_description: "Publish BeeX web properties and verify CDN delivery"
-  default_prompt: "Publish the selected BeeX web property through its controlled release path and verify it."

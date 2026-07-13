@@ -1,4 +1,0 @@
-interface:
-  display_name: "Release BeeX Services"
-  short_description: "Deploy BeeX backend services through Yunxiao safely"
-  default_prompt: "Deploy the selected BeeX backend component through its Yunxiao pipeline and verify it."

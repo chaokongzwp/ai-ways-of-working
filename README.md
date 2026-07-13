@@ -23,39 +23,15 @@ docs/                   文档模板（copy 改即用）
   ├── index / overview / scenario-1-flow / xxx-design / feature-status .html
   └── assets/ (mermaid.min.js + auth-guard.js 门禁)
 scripts/                deploy-oss-cdn.sh · refresh-cdn.py · feishu-doc-change-notify.mjs
-skills/                 BeeX H5 / iOS / Android / 服务 / Web / 全量发布 Skills
 AGENTS.md               给 AI —— Codex / 通用约定自动读
 CLAUDE.md               给 AI —— Claude Code 自动读（转发到 AGENTS.md）
 ```
 
-## BeeX 发布 Skills
+## 项目工具边界
 
-安装到本机 Codex，并注册统一发布命令：
+本仓库只维护跨项目可复用的工作方法、文档模板和协作规范。项目专属的仓库名、流水线 ID、域名、环境配置、构建脚本和发布 Skill 必须放在该项目自己的工具仓库中。
 
-```bash
-bash scripts/install-codex-skills.sh
-beex-release inventory
-beex-release --help
-```
-
-提供六个可独立触发的 Skill：
-
-- `beex-release-h5`：构建 H5 离线包、登记 DRAFT、测试后转正式/灰度/发布
-- `beex-release-ios`：构建 IPA、内置指定 H5、上传 App Store Connect
-- `beex-release-android`：构建测试 APK 或正式 AAB
-- `beex-release-service`：发布业务服务、管理后台服务、SSO、AI Worker
-- `beex-release-web`：发布管理后台、PRD 文档站和官网
-- `beex-release-all`：按测试、正式晋级、Native 三阶段执行全量发布
-
-先预演，不触发真实流水线：
-
-```bash
-beex-release all --phase test --dry-run
-```
-
-统一发布器只编排各仓库已经存在的构建脚本和云效流水线，不复制构建逻辑。它会拒绝脏工作区、未推送提交、H5 正式环境重新构建，以及没有指定测试 commit 的业务服务正式发布。
-
-Native 发布会分别记录“签名目标”和“后端环境”，并校验真正内置进安装包的 H5 版本；SSO 与 AI Worker 是共享服务，只有显式增加 `--include-shared` 才进入全量发布。
+推荐每个项目建立独立的 `<project>-release-tools`：业务仓库负责“怎么构建”，发布工具仓库负责“按什么顺序、经过哪些门禁进行编排”，平台权限负责真正的安全隔离。
 
 ## 让团队的 AI 自动按方法论干活
 
