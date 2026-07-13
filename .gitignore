@@ -6,6 +6,8 @@
 *.tgz
 *.log
 node_modules/
+__pycache__/
+*.pyc
 
 # 本地凭证（千万别提交）
 .env

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Release All BeeX"
+  short_description: "Run gated full-stack BeeX release trains safely"
+  default_prompt: "Run a gated BeeX full release in explicit test, production, or native phases."

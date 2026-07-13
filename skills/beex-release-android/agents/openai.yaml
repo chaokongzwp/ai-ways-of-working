@@ -1,0 +1,4 @@
+interface:
+  display_name: "Release BeeX Android"
+  short_description: "Build BeeX Android APK and AAB releases safely"
+  default_prompt: "Build a BeeX Android APK or AAB with the correct version and bundled H5 package."

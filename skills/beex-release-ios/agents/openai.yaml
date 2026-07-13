@@ -1,0 +1,4 @@
+interface:
+  display_name: "Release BeeX iOS"
+  short_description: "Build and upload BeeX iOS releases safely"
+  default_prompt: "Build and publish a BeeX iOS release with the correct bundled H5 package."
